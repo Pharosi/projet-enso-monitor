@@ -2,8 +2,9 @@
 
 from fastapi import APIRouter
 
-from enso.api.v1.routes import observations, sante
+from enso.api.v1.routes import episodes, observations, sante
 
 routeur_v1 = APIRouter(prefix="/api/v1")
 routeur_v1.include_router(sante.routeur)
 routeur_v1.include_router(observations.routeur)
+routeur_v1.include_router(episodes.routeur)
