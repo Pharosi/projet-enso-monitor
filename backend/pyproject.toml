@@ -39,3 +39,12 @@ target-version = "py313"
 [tool.ruff.lint]
 # E/F : erreurs de base, I : ordre des imports, UP : syntaxe Python moderne, B : bugs fréquents
 select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.per-file-ignores]
+# Les migrations générées contiennent de longues chaînes SQL (contraintes CHECK).
+"alembic/versions/*" = ["E501"]
+
+[tool.ruff.lint.isort]
+# Le dossier local alembic/ ferait croire que la bibliothèque alembic est interne.
+known-first-party = ["enso"]
+known-third-party = ["alembic"]
