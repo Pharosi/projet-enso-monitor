@@ -1,4 +1,4 @@
-"""Accès à la table observations (écriture par l'ETL)."""
+"""Accès à la table observations : écriture par l'ETL, lecture par l'API."""
 
 from datetime import date
 from decimal import Decimal
@@ -58,3 +58,33 @@ def mettre_a_jour_observations(
                 import_id=import_id,
             )
         )
+
+
+def lister_mesures(
+    session: Session, indice_id: int, debut: date | None, fin: date | None
+) -> list[MesureOni]:
+    """Observations d'un indice, triées par date, éventuellement limitées à une période.
+
+    Les bornes sont transmises comme paramètres SQL (jamais concaténées) :
+    SQLAlchemy génère « WHERE date_periode >= %(param)s ».
+    """
+    requete = (
+        select(Observation)
+        .where(Observation.indice_id == indice_id)
+        .order_by(Observation.date_periode)
+    )
+    if debut is not None:
+        requete = requete.where(Observation.date_periode >= debut)
+    if fin is not None:
+        requete = requete.where(Observation.date_periode <= fin)
+
+    return [
+        MesureOni(
+            saison=observation.saison,
+            annee=observation.annee,
+            date_periode=observation.date_periode,
+            temperature_totale=observation.temperature_totale,
+            anomalie=observation.anomalie,
+        )
+        for observation in session.scalars(requete)
+    ]

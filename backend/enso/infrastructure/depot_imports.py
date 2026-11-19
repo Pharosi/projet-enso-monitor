@@ -1,6 +1,8 @@
 """Accès à la table imports : trace de chaque exécution de l'ETL."""
 
-from sqlalchemy import func
+from datetime import datetime
+
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from enso.infrastructure.modeles import Import
@@ -34,3 +36,12 @@ def enregistrer_echec(import_: Import, message_erreur: str) -> None:
     import_.statut = "echoue"
     import_.termine_le = func.now()
     import_.message_erreur = message_erreur
+
+
+def date_derniere_extraction(session: Session, indice_id: int) -> datetime | None:
+    """Date du dernier import réussi : affichée pour prouver la fraîcheur des données."""
+    return session.scalar(
+        select(func.max(Import.date_extraction)).where(
+            Import.indice_id == indice_id, Import.statut == "reussi"
+        )
+    )

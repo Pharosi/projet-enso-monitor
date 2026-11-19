@@ -22,7 +22,7 @@ class EtatDeSante(BaseModel):
     "/sante",
     summary="Vérifier l'état de l'API et de la base de données",
     response_model=EtatDeSante,
-    responses={503: {"description": "Base de données indisponible"}},
+    responses={503: {"description": "Base de données indisponible (statut « degrade »)"}},
 )
 def verifier_sante(
     reponse: Response, session: Annotated[Session, Depends(obtenir_session)]

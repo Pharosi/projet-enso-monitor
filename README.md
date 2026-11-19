@@ -90,6 +90,50 @@ uvicorn enso.api.main:app --reload
 - Documentation interactive (OpenAPI) : http://localhost:8000/docs
 - Santé de l'API : http://localhost:8000/api/v1/sante
 
+#### Routes disponibles
+
+| Méthode | Route                  | Description                                   | Paramètres                                  |
+| ------- | ---------------------- | --------------------------------------------- | ------------------------------------------- |
+| GET     | `/api/v1/sante`        | État de l'API et de la base                   | —                                           |
+| GET     | `/api/v1/observations` | Observations ONI, avec unité et source        | `debut`, `fin` (facultatifs, `AAAA-MM-JJ`) |
+| GET     | `/api/v1/episodes/references` | Épisodes historiques proposés à la comparaison | — |
+| GET     | `/api/v1/episodes/comparaison` | Comparaison de deux périodes : pic, moyenne, durées, interprétation et limites | `debut_a`, `fin_a`, `debut_b`, `fin_b` (obligatoires) |
+
+Exemples :
+- `GET /api/v1/observations?debut=1997-01-01&fin=1998-12-01`
+- `GET /api/v1/episodes/comparaison?debut_a=1997-01-01&fin_a=1998-06-01&debut_b=2015-01-01&fin_b=2016-06-01`
+
+#### Règles de la comparaison
+
+| Règle | Valeur | Origine |
+| ----- | ------ | ------- |
+| Épisode El Niño | ONI ≥ +0,5 °C pendant au moins 5 saisons consécutives | Définition opérationnelle NOAA CPC |
+| Épisode La Niña | ONI ≤ −0,5 °C pendant au moins 5 saisons consécutives | Définition opérationnelle NOAA CPC |
+| Intensité du pic | faible ≥ 0,5 · modérée ≥ 1,0 · forte ≥ 1,5 · très forte ≥ 2,0 °C | Convention d'usage, **non officielle** |
+
+Chaque comparaison renvoie aussi ses limites (convention d'intensité, absence d'impacts mesurés, durée bornée à la période, tendance au réchauffement, révisions récentes, aucune prévision).
+
+| Code | Cas                                                             |
+| ---- | --------------------------------------------------------------- |
+| 200  | Succès                                                          |
+| 404  | Aucune donnée importée (lancer l'ETL)                           |
+| 422  | Paramètre invalide : date mal formée, début après la fin, paramètre inconnu |
+| 500  | Erreur inattendue (message générique, détail uniquement dans les journaux du serveur) |
+
+Toutes les erreurs ont le même format :
+
+```json
+{
+  "erreur": {
+    "code": 422,
+    "message": "Paramètres de requête invalides.",
+    "details": [{ "champ": "debut", "message": "Input should be a valid date…" }]
+  }
+}
+```
+
+L'API n'accepte les appels navigateur (CORS) que depuis les origines listées dans `ORIGINES_CORS` (par défaut le frontend local `http://localhost:5173`), et uniquement en lecture (`GET`).
+
 ## Données
 
 | Élément              | Valeur                                                                                             |
@@ -120,6 +164,10 @@ Les tests d'intégration utilisent une base dédiée `enso_test`, créée automa
 | `tests/test_transformation.py` | **Test minimal n°1** : conversion, doublons, saisons/années invalides  |
 | `tests/test_chargement.py`     | Classement des mesures : nouvelles, révisées, inchangées                |
 | `tests/test_pipeline_etl.py`   | ETL complet : traçabilité, ré-import sans doublon, révision, échec      |
+| `tests/test_api_observations.py` | **Test minimal n°2** : route filtrée par période, entrées invalides (422), absence de données (404) |
+| `tests/test_api_erreurs.py`    | Format d'erreur unique, aucune fuite d'information (500), CORS          |
+| `tests/test_episodes.py`       | Seuils d'intensité, séquences consécutives, détection El Niño / La Niña, interprétation |
+| `tests/test_api_episodes.py`   | Route de comparaison : réponse complète, 422, 404, épisodes de référence |
 
 ## Qualité du code
 

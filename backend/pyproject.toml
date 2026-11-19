@@ -1,6 +1,6 @@
 [project]
 name = "enso-monitor"
-version = "0.1.0"
+version = "0.2.0"
 description = "API et ETL de la plateforme ENSO Monitor (indice ONI de la NOAA)"
 requires-python = ">=3.13"
 # Bornes : version testée minimale, majeure suivante exclue (évite une rupture d'API).
@@ -31,6 +31,8 @@ include = ["enso*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# Avertissement interne de Starlette (TestClient), sans effet sur nos tests.
+filterwarnings = ["ignore:Using `httpx` with `starlette.testclient`"]
 
 [tool.ruff]
 line-length = 100
