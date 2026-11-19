@@ -23,6 +23,9 @@ class Parametres(BaseSettings):
 
     url_base_de_donnees: str
 
+    # Fichier officiel de l'ONI v6 publié par la NOAA CPC (mis à jour chaque mois).
+    url_fichier_oni: str = "https://www.cpc.ncep.noaa.gov/data/indices/oni.ascii.txt"
+
 
 @lru_cache
 def obtenir_parametres() -> Parametres:

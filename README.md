@@ -73,7 +73,15 @@ pip install -e ".[dev]"
 alembic upgrade head      # crée les tables (migrations dans backend/alembic/versions)
 ```
 
-### 4. API
+### 4. Import des données NOAA (ETL)
+
+```bash
+python -m enso.etl
+```
+
+L'ETL télécharge le fichier officiel, valide chaque ligne et enregistre les observations. Il peut être relancé sans risque : les valeurs déjà présentes ne sont pas dupliquées, seules les valeurs révisées par la NOAA sont mises à jour. Chaque exécution est tracée dans la table `imports` (URL, date d'extraction, empreinte SHA-256, compteurs, statut).
+
+### 5. API
 
 ```bash
 uvicorn enso.api.main:app --reload
@@ -82,7 +90,38 @@ uvicorn enso.api.main:app --reload
 - Documentation interactive (OpenAPI) : http://localhost:8000/docs
 - Santé de l'API : http://localhost:8000/api/v1/sante
 
-### Qualité du code
+## Données
+
+| Élément              | Valeur                                                                                             |
+| -------------------- | -------------------------------------------------------------------------------------------------- |
+| Indice               | ONI — *Oceanic Niño Index*, version 6 (ERSST.v6)                                                   |
+| Producteur           | NOAA Climate Prediction Center                                                                     |
+| Fichier importé      | https://www.cpc.ncep.noaa.gov/data/indices/oni.ascii.txt                                           |
+| Documentation        | https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso/oni/v6/index.php                   |
+| Couverture           | DJF 1950 → ASO 2026 (921 saisons glissantes de trois mois)                                         |
+| Unité                | °C (anomalie de température de surface de la mer, région Niño 3.4 : 5°N-5°S, 120°-170°O)          |
+| Extraction de référence | 19/11/2026 (fichier publié le 03/11/2026)                                                       |
+
+La NOAA indique que les valeurs des deux derniers mois peuvent encore être révisées ; l'ETL met donc à jour une valeur existante lorsqu'elle change. Depuis 2026, la NOAA utilise le RONI (*Relative ONI*) pour la surveillance officielle de l'ENSO ; ce projet utilise l'ONI pour l'analyse historique (voir le dossier de conception).
+
+Un extrait authentique (1997-1998) est versionné dans `backend/tests/donnees/` pour les tests.
+
+## Tests
+
+```bash
+cd backend
+pytest -v
+```
+
+Les tests d'intégration utilisent une base dédiée `enso_test`, créée automatiquement dans le conteneur PostgreSQL (la base de développement n'est jamais modifiée). Ils sont ignorés si PostgreSQL n'est pas démarré.
+
+| Fichier                        | Vérifie                                                                 |
+| ------------------------------ | ----------------------------------------------------------------------- |
+| `tests/test_transformation.py` | **Test minimal n°1** : conversion, doublons, saisons/années invalides  |
+| `tests/test_chargement.py`     | Classement des mesures : nouvelles, révisées, inchangées                |
+| `tests/test_pipeline_etl.py`   | ETL complet : traçabilité, ré-import sans doublon, révision, échec      |
+
+## Qualité du code
 
 ```bash
 cd backend
@@ -90,7 +129,7 @@ ruff check .          # analyse statique
 ruff format .         # formatage
 ```
 
-> Les instructions d'import des données, de lancement du frontend et des tests seront complétées au fil du développement.
+> Les instructions de lancement du frontend seront complétées au fil du développement.
 
 ## Conventions du projet
 
