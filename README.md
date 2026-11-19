@@ -23,7 +23,67 @@ Transformer des observations climatiques réelles en visualisations compréhensi
 | ETL      | Python, Pandas, NumPy                 |
 | Tests    | Pytest, Vitest                        |
 
-> Les instructions d'installation et de lancement seront complétées au fil du développement.
+## Structure du dépôt
+
+```
+projet-enso-monitor/
+├── backend/                # API FastAPI et ETL (Python)
+│   ├── enso/
+│   │   ├── domaine/        # entités et règles métier pures
+│   │   ├── application/    # cas d'utilisation
+│   │   ├── infrastructure/ # PostgreSQL, dépôts, accès NOAA
+│   │   ├── api/v1/         # routes HTTP et schémas Pydantic
+│   │   └── config.py       # paramètres lus depuis l'environnement
+│   ├── tests/
+│   └── pyproject.toml      # dépendances et configuration des outils
+├── frontend/               # application React (à venir)
+├── compose.yaml            # PostgreSQL pour le développement local
+└── .env.example            # modèle des variables d'environnement
+```
+
+## Démarrage local
+
+### Prérequis
+
+- Docker et Docker Compose
+- Python 3.13 ou supérieur
+
+### 1. Configuration
+
+```bash
+cp .env.example .env
+```
+
+Remplacer ensuite `changer-ce-mot-de-passe` par un mot de passe local (même valeur dans `POSTGRES_PASSWORD` et dans `URL_BASE_DE_DONNEES`).
+
+### 2. Base de données
+
+```bash
+docker compose up -d db
+```
+
+### 3. API
+
+```bash
+cd backend
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e ".[dev]"
+uvicorn enso.api.main:app --reload
+```
+
+- Documentation interactive (OpenAPI) : http://localhost:8000/docs
+- Santé de l'API : http://localhost:8000/api/v1/sante
+
+### Qualité du code
+
+```bash
+cd backend
+ruff check .          # analyse statique
+ruff format .         # formatage
+```
+
+> Les instructions d'import des données, de lancement du frontend et des tests seront complétées au fil du développement.
 
 ## Conventions du projet
 
