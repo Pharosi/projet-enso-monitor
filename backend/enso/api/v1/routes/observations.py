@@ -9,9 +9,9 @@ from enso.api.erreurs import EnveloppeErreur
 from enso.api.v1.schemas import (
     FiltrePeriode,
     IndiceReponse,
-    ObservationReponse,
     SerieObservationsReponse,
     SourceReponse,
+    observation_depuis_mesure,
 )
 from enso.application.consultation import SerieObservations, consulter_serie
 from enso.domaine.oni import INDICE_ONI
@@ -56,14 +56,5 @@ def construire_reponse(serie: SerieObservations, filtre: FiltrePeriode) -> Serie
         debut=filtre.debut,
         fin=filtre.fin,
         nombre=len(serie.mesures),
-        observations=[
-            ObservationReponse(
-                saison=mesure.saison,
-                annee=mesure.annee,
-                date_periode=mesure.date_periode,
-                anomalie=float(mesure.anomalie),
-                temperature_totale=float(mesure.temperature_totale),
-            )
-            for mesure in serie.mesures
-        ],
+        observations=[observation_depuis_mesure(mesure) for mesure in serie.mesures],
     )

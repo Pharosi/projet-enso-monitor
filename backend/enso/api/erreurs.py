@@ -17,6 +17,7 @@ from pydantic import BaseModel
 from starlette.exceptions import HTTPException
 
 from enso.application.consultation import IndiceIntrouvable
+from enso.domaine.episodes import PeriodeVide
 
 journal = logging.getLogger("enso.api")
 
@@ -50,7 +51,10 @@ async def gerer_erreur_http(requete: Request, erreur: HTTPException) -> JSONResp
     return reponse_erreur(erreur.status_code, str(erreur.detail))
 
 
-async def gerer_indice_introuvable(requete: Request, erreur: IndiceIntrouvable) -> JSONResponse:
+async def gerer_donnees_absentes(
+    requete: Request, erreur: IndiceIntrouvable | PeriodeVide
+) -> JSONResponse:
+    """Indice jamais importé ou période sans observation : la ressource n'existe pas (404)."""
     return reponse_erreur(status.HTTP_404_NOT_FOUND, str(erreur))
 
 
@@ -76,6 +80,7 @@ async def gerer_erreur_inattendue(requete: Request, erreur: Exception) -> JSONRe
 
 def enregistrer_gestionnaires_erreurs(application: FastAPI) -> None:
     application.add_exception_handler(HTTPException, gerer_erreur_http)
-    application.add_exception_handler(IndiceIntrouvable, gerer_indice_introuvable)
+    application.add_exception_handler(IndiceIntrouvable, gerer_donnees_absentes)
+    application.add_exception_handler(PeriodeVide, gerer_donnees_absentes)
     application.add_exception_handler(RequestValidationError, gerer_erreur_validation)
     application.add_exception_handler(Exception, gerer_erreur_inattendue)
