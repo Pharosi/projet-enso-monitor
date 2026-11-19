@@ -1,0 +1,26 @@
+# Environnement de développement local.
+# Seule la base de données tourne dans Docker : l'API et l'ETL sont lancés
+# depuis l'environnement virtuel Python pour profiter du rechargement automatique.
+# La configuration de production (API, ETL, frontend, Caddy) est dans deploy/.
+
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: enso-db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      # Port publié uniquement sur la machine locale (127.0.0.1), jamais sur le réseau.
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - donnees_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  donnees_postgres:
