@@ -26,6 +26,10 @@ class Parametres(BaseSettings):
     # Fichier officiel de l'ONI v6 publié par la NOAA CPC (mis à jour chaque mois).
     url_fichier_oni: str = "https://www.cpc.ncep.noaa.gov/data/indices/oni.ascii.txt"
 
+    # Origines autorisées à appeler l'API depuis un navigateur (frontend Vite en local).
+    # Dans le .env, au format JSON : ORIGINES_CORS=["https://enso.exemple.fr"]
+    origines_cors: list[str] = ["http://localhost:5173"]
+
 
 @lru_cache
 def obtenir_parametres() -> Parametres:

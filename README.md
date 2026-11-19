@@ -104,6 +104,21 @@ Exemple : `GET /api/v1/observations?debut=1997-01-01&fin=1998-12-01`
 | 200  | Succès                                                          |
 | 404  | Aucune donnée importée (lancer l'ETL)                           |
 | 422  | Paramètre invalide : date mal formée, début après la fin, paramètre inconnu |
+| 500  | Erreur inattendue (message générique, détail uniquement dans les journaux du serveur) |
+
+Toutes les erreurs ont le même format :
+
+```json
+{
+  "erreur": {
+    "code": 422,
+    "message": "Paramètres de requête invalides.",
+    "details": [{ "champ": "debut", "message": "Input should be a valid date…" }]
+  }
+}
+```
+
+L'API n'accepte les appels navigateur (CORS) que depuis les origines listées dans `ORIGINES_CORS` (par défaut le frontend local `http://localhost:5173`), et uniquement en lecture (`GET`).
 
 ## Données
 
@@ -136,6 +151,7 @@ Les tests d'intégration utilisent une base dédiée `enso_test`, créée automa
 | `tests/test_chargement.py`     | Classement des mesures : nouvelles, révisées, inchangées                |
 | `tests/test_pipeline_etl.py`   | ETL complet : traçabilité, ré-import sans doublon, révision, échec      |
 | `tests/test_api_observations.py` | **Test minimal n°2** : route filtrée par période, entrées invalides (422), absence de données (404) |
+| `tests/test_api_erreurs.py`    | Format d'erreur unique, aucune fuite d'information (500), CORS          |
 
 ## Qualité du code
 
