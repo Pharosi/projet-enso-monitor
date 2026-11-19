@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session
 from enso.domaine.oni import DescriptionIndice, DescriptionSource, MesureOni
 from enso.infrastructure.depot_imports import date_derniere_extraction
 from enso.infrastructure.depot_observations import lister_mesures
-from enso.infrastructure.depot_referentiel import trouver_indice
+from enso.infrastructure.depot_referentiel import IndiceEnregistre, trouver_indice
 
 
 class IndiceIntrouvable(LookupError):
@@ -27,15 +27,20 @@ class SerieObservations:
     mesures: list[MesureOni]
 
 
-def consulter_serie(
-    session: Session, code_indice: str, debut: date | None, fin: date | None
-) -> SerieObservations:
+def obtenir_indice(session: Session, code_indice: str) -> IndiceEnregistre:
+    """Retourne l'indice ou lève IndiceIntrouvable (réutilisé par tous les cas d'utilisation)."""
     indice = trouver_indice(session, code_indice)
     if indice is None:
         raise IndiceIntrouvable(
             f"Aucune donnée pour l'indice {code_indice} : lancer l'import (python -m enso.etl)."
         )
+    return indice
 
+
+def consulter_serie(
+    session: Session, code_indice: str, debut: date | None, fin: date | None
+) -> SerieObservations:
+    indice = obtenir_indice(session, code_indice)
     return SerieObservations(
         indice=indice.description,
         source=indice.source,
