@@ -90,6 +90,21 @@ uvicorn enso.api.main:app --reload
 - Documentation interactive (OpenAPI) : http://localhost:8000/docs
 - Santé de l'API : http://localhost:8000/api/v1/sante
 
+#### Routes disponibles
+
+| Méthode | Route                  | Description                                   | Paramètres                                  |
+| ------- | ---------------------- | --------------------------------------------- | ------------------------------------------- |
+| GET     | `/api/v1/sante`        | État de l'API et de la base                   | —                                           |
+| GET     | `/api/v1/observations` | Observations ONI, avec unité et source        | `debut`, `fin` (facultatifs, `AAAA-MM-JJ`) |
+
+Exemple : `GET /api/v1/observations?debut=1997-01-01&fin=1998-12-01`
+
+| Code | Cas                                                             |
+| ---- | --------------------------------------------------------------- |
+| 200  | Succès                                                          |
+| 404  | Aucune donnée importée (lancer l'ETL)                           |
+| 422  | Paramètre invalide : date mal formée, début après la fin, paramètre inconnu |
+
 ## Données
 
 | Élément              | Valeur                                                                                             |
@@ -120,6 +135,7 @@ Les tests d'intégration utilisent une base dédiée `enso_test`, créée automa
 | `tests/test_transformation.py` | **Test minimal n°1** : conversion, doublons, saisons/années invalides  |
 | `tests/test_chargement.py`     | Classement des mesures : nouvelles, révisées, inchangées                |
 | `tests/test_pipeline_etl.py`   | ETL complet : traçabilité, ré-import sans doublon, révision, échec      |
+| `tests/test_api_observations.py` | **Test minimal n°2** : route filtrée par période, entrées invalides (422), absence de données (404) |
 
 ## Qualité du code
 
