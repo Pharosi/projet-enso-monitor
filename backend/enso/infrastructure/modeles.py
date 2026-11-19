@@ -29,6 +29,9 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
+from enso.domaine.oni import ANNEE_MAXIMALE, ANNEE_MINIMALE, ANOMALIE_MAXIMALE_ABSOLUE
+from enso.domaine.saisons import SAISONS_VALIDES
+
 # Nommage explicite des contraintes : des noms stables rendent les migrations
 # Alembic prévisibles et les messages d'erreur lisibles.
 CONVENTION_DE_NOMMAGE = {
@@ -39,20 +42,6 @@ CONVENTION_DE_NOMMAGE = {
     "pk": "pk_%(table_name)s",
 }
 
-SAISONS_VALIDES = (
-    "DJF",
-    "JFM",
-    "FMA",
-    "MAM",
-    "AMJ",
-    "MJJ",
-    "JJA",
-    "JAS",
-    "ASO",
-    "SON",
-    "OND",
-    "NDJ",
-)
 STATUTS_IMPORT = ("en_cours", "reussi", "echoue")
 
 
@@ -147,8 +136,13 @@ class Observation(Base):
         # au filtrage temporel de l'API.
         UniqueConstraint("indice_id", "date_periode", name="uq_observations_indice_periode"),
         CheckConstraint(f"saison IN ({liste_sql(SAISONS_VALIDES)})", name="saison_valide"),
-        CheckConstraint("annee BETWEEN 1950 AND 2100", name="annee_plausible"),
-        CheckConstraint("anomalie BETWEEN -5 AND 5", name="anomalie_plausible"),
+        CheckConstraint(
+            f"annee BETWEEN {ANNEE_MINIMALE} AND {ANNEE_MAXIMALE}", name="annee_plausible"
+        ),
+        CheckConstraint(
+            f"anomalie BETWEEN -{ANOMALIE_MAXIMALE_ABSOLUE} AND {ANOMALIE_MAXIMALE_ABSOLUE}",
+            name="anomalie_plausible",
+        ),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
