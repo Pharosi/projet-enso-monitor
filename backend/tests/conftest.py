@@ -6,17 +6,23 @@ Chaque test démarre avec des tables vides.
 """
 
 from collections.abc import Iterator
+from pathlib import Path
 
 import pytest
+from fastapi.testclient import TestClient
 from sqlalchemy import Engine, create_engine, text
 from sqlalchemy.engine import URL, make_url
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.orm import Session
 
+from enso.api.main import creer_application
 from enso.config import obtenir_parametres
+from enso.etl.pipeline import executer_import_oni
+from enso.infrastructure.base_de_donnees import obtenir_session
 from enso.infrastructure.modeles import Base
 
 NOM_BASE_DE_TEST = "enso_test"
+EXTRAIT_REEL = Path(__file__).parent / "donnees" / "oni_extrait_1997_1998.txt"
 
 
 def creer_base_si_absente(url: URL) -> None:
@@ -59,3 +65,26 @@ def session_de_test(moteur_de_test: Engine) -> Iterator[Session]:
         connexion.execute(
             text("TRUNCATE observations, imports, indices, sources RESTART IDENTITY CASCADE")
         )
+
+
+@pytest.fixture
+def extrait_1997_1998_importe(session_de_test: Session) -> None:
+    """Remplit la base de test avec l'extrait réel 1997-1998 (24 saisons) via le vrai ETL."""
+
+    def lire_extrait(url: str) -> bytes:
+        return EXTRAIT_REEL.read_bytes()
+
+    executer_import_oni(session_de_test, "https://exemple.test/oni.ascii.txt", lire_extrait)
+
+
+@pytest.fixture
+def client_api(session_de_test: Session) -> Iterator[TestClient]:
+    """Client HTTP de test : l'API utilise la session de test au lieu de la vraie base."""
+    application = creer_application()
+
+    def obtenir_session_de_test() -> Iterator[Session]:
+        yield session_de_test
+
+    application.dependency_overrides[obtenir_session] = obtenir_session_de_test
+    with TestClient(application) as client:
+        yield client

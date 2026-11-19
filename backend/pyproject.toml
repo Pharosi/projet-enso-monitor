@@ -31,6 +31,8 @@ include = ["enso*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# Avertissement interne de Starlette (TestClient), sans effet sur nos tests.
+filterwarnings = ["ignore:Using `httpx` with `starlette.testclient`"]
 
 [tool.ruff]
 line-length = 100
