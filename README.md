@@ -34,6 +34,7 @@ projet-enso-monitor/
 │   │   ├── infrastructure/ # PostgreSQL, dépôts, accès NOAA
 │   │   ├── api/v1/         # routes HTTP et schémas Pydantic
 │   │   └── config.py       # paramètres lus depuis l'environnement
+│   ├── alembic/            # migrations du schéma PostgreSQL
 │   ├── tests/
 │   └── pyproject.toml      # dépendances et configuration des outils
 ├── frontend/               # application React (à venir)
@@ -62,13 +63,19 @@ Remplacer ensuite `changer-ce-mot-de-passe` par un mot de passe local (même val
 docker compose up -d db
 ```
 
-### 3. API
+### 3. Environnement Python et schéma de la base
 
 ```bash
 cd backend
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
+alembic upgrade head      # crée les tables (migrations dans backend/alembic/versions)
+```
+
+### 4. API
+
+```bash
 uvicorn enso.api.main:app --reload
 ```
 
