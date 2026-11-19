@@ -4,6 +4,8 @@
 créés qu'au premier import, puis simplement relus.
 """
 
+from dataclasses import dataclass
+
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -40,3 +42,34 @@ def obtenir_ou_creer_indice(
     session.add(indice)
     session.flush()
     return indice
+
+
+@dataclass(frozen=True)
+class IndiceEnregistre:
+    """Un indice lu en base avec sa source, converti en objets du domaine."""
+
+    id: int
+    description: DescriptionIndice
+    source: DescriptionSource
+
+
+def trouver_indice(session: Session, code: str) -> IndiceEnregistre | None:
+    indice = session.scalar(select(Indice).where(Indice.code == code))
+    if indice is None:
+        return None
+
+    return IndiceEnregistre(
+        id=indice.id,
+        description=DescriptionIndice(
+            code=indice.code,
+            nom=indice.nom,
+            unite=indice.unite,
+            version=indice.version,
+            description=indice.description or "",
+        ),
+        source=DescriptionSource(
+            nom=indice.source.nom,
+            url=indice.source.url,
+            description=indice.source.description or "",
+        ),
+    )
