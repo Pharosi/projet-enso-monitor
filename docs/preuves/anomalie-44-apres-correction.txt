@@ -1,0 +1,13 @@
+# Anomalie #44 — APRÈS correction — 20/11/2026 14:41
+$ npx vitest run src/tests/SectionSerie.test.tsx
+ ✓ src/tests/SectionSerie.test.tsx > SectionSerie > actualise les valeurs affichées quand la période change 216ms
+ ✓ src/tests/SectionSerie.test.tsx > SectionSerie > refuse une période inversée sans appeler l'API 83ms
+ ✓ src/tests/SectionSerie.test.tsx > SectionSerie > ne propose aucun champ de date à saisir librement 30ms
+ ✓ src/tests/SectionSerie.test.tsx > SectionSerie > refuse un mois choisi sans année, sans appeler l'API 45ms
+ ✓ src/tests/SectionSerie.test.tsx > SectionSerie > affiche le message de l'API en cas d'erreur 11ms
+ ✓ src/tests/SectionSerie.test.tsx > SectionSerie > affiche la source, la version et la date d’extraction 26ms
+      Tests  6 passed (6)
+
+$ npm test (non-régression complète)
+ Test Files  5 passed (5)
+      Tests  30 passed (30)

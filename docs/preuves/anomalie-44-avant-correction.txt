@@ -1,0 +1,16 @@
+# Anomalie #44 — AVANT correction (les tests reproduisent le problème) — 20/11/2026 14:40
+$ npx vitest run src/tests/SectionSerie.test.tsx
+ × src/tests/SectionSerie.test.tsx > SectionSerie > actualise les valeurs affichées quand la période change 105ms
+   → Unable to find a label with the text of: Mois de début
+ × src/tests/SectionSerie.test.tsx > SectionSerie > refuse une période inversée sans appeler l'API 24ms
+   → Unable to find a label with the text of: Mois de début
+ × src/tests/SectionSerie.test.tsx > SectionSerie > ne propose aucun champ de date à saisir librement 27ms
+ × src/tests/SectionSerie.test.tsx > SectionSerie > refuse un mois choisi sans année, sans appeler l'API 21ms
+   → Unable to find a label with the text of: Mois de début
+ ✓ src/tests/SectionSerie.test.tsx > SectionSerie > affiche le message de l'API en cas d'erreur 5ms
+ ✓ src/tests/SectionSerie.test.tsx > SectionSerie > affiche la source, la version et la date d’extraction 19ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+TestingLibraryElementError: Unable to find a label with the text of: Mois de début
+TestingLibraryElementError: Unable to find a label with the text of: Mois de début
+TestingLibraryElementError: Unable to find a label with the text of: Mois de début
+      Tests  4 failed | 2 passed (6)

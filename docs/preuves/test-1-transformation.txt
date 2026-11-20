@@ -1,5 +1,5 @@
 # Test minimal n°1 — transformation Python des observations NOAA
-# Exécuté le 20/11/2026 14:29 (Europe/Paris) sur le commit b725374 (branche develop)
+# Exécuté le 20/11/2026 15:19 (Europe/Paris) sur le commit acf0480 (branche develop)
 # Environnement : Python 3.14.10, PostgreSQL 17 (Docker)
 
 $ cd backend && pytest -v tests/test_transformation.py
