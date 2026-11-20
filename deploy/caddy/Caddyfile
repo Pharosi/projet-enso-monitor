@@ -1,0 +1,39 @@
+# Caddy : unique point d'entrée public (ports 80 et 443).
+# - certificat HTTPS obtenu et renouvelé automatiquement (Let's Encrypt) ;
+# - redirection automatique de HTTP vers HTTPS ;
+# - /api/* relayé vers l'API (réseau Docker interne), le reste = fichiers du frontend.
+
+{
+	# Adresse de contact pour Let's Encrypt (avertissements d'expiration).
+	email {$EMAIL_ACME}
+}
+
+{$DOMAINE} {
+	encode zstd gzip
+
+	# En-têtes de sécurité communs à toutes les réponses.
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+
+	handle /api/* {
+		reverse_proxy api:8000
+	}
+
+	handle {
+		# Politique de contenu stricte pour l'application : uniquement des ressources du site.
+		# 'unsafe-inline' pour les styles : Recharts positionne ses éléments par attributs style.
+		header Content-Security-Policy "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; frame-ancestors 'none'"
+		root * /srv
+		try_files {path} /index.html
+		file_server
+	}
+
+	log {
+		output stdout
+		format json
+	}
+}
