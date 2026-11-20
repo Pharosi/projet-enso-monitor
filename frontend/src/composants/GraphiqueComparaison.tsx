@@ -35,8 +35,17 @@ export function GraphiqueComparaison({ points, libelleA, libelleB, idDescription
       </figcaption>
 
       <div className={styles.zone}>
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={points} margin={{ top: 8, right: 16, bottom: 8, left: 0 }}>
+        {/* Taille utilisée avant la première mesure : évite un graphique vide au chargement. */}
+        <ResponsiveContainer
+          width="100%"
+          height="100%"
+          initialDimension={{ width: 800, height: 350 }}
+        >
+          <LineChart
+            data={points}
+            margin={{ top: 8, right: 16, bottom: 8, left: 0 }}
+            title="Courbes superposées des deux épisodes : flèches gauche et droite pour parcourir"
+          >
             <CartesianGrid strokeDasharray="3 3" stroke="var(--couleur-bordure)" />
             <XAxis dataKey="rang" tickFormatter={(rang: number) => `S${rang}`} />
             <YAxis tickFormatter={formaterGraduationValeur} width={70} domain={['auto', 'auto']} />

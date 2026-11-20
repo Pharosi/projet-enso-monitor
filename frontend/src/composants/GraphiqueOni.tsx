@@ -44,8 +44,17 @@ export function GraphiqueOni({ observations, unite, idDescription }: Proprietes)
       </figcaption>
 
       <div className={styles.zone}>
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={observations} margin={{ top: 8, right: 16, bottom: 8, left: 0 }}>
+        {/* Taille utilisée avant la première mesure : évite un graphique vide au chargement. */}
+        <ResponsiveContainer
+          width="100%"
+          height="100%"
+          initialDimension={{ width: 800, height: 350 }}
+        >
+          <LineChart
+            data={observations}
+            margin={{ top: 8, right: 16, bottom: 8, left: 0 }}
+            title="Courbe de l'indice ONI : flèches gauche et droite pour parcourir les valeurs"
+          >
             <CartesianGrid strokeDasharray="3 3" stroke="var(--couleur-bordure)" />
             <XAxis
               dataKey="date_periode"
