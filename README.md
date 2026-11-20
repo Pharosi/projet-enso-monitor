@@ -81,7 +81,7 @@ projet-enso-monitor/
 └── .env.example            # modèle des variables de développement
 ```
 
-Le dossier de conception (livrable B) détaille les diagrammes UML, le schéma relationnel et la justification de chaque choix.
+Le dossier de conception (livrable B, [`docs/dossier/`](docs/dossier/)) détaille les diagrammes UML, le schéma relationnel et la justification de chaque choix. Il est écrit en HTML et converti en PDF par Chrome : `docs/dossier/.venv/bin/python docs/dossier/generer_pdf.py` (voir l'en-tête du script).
 
 ## Démarrage local
 
