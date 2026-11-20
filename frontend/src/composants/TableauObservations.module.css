@@ -1,0 +1,34 @@
+.details summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--couleur-principale);
+}
+
+/* Le tableau défile dans son cadre au lieu d'élargir la page sur mobile. */
+.defilement {
+  max-height: 24rem;
+  overflow: auto;
+  margin-top: 0.5rem;
+}
+
+.tableau {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tableau caption {
+  text-align: left;
+  padding-bottom: 0.5rem;
+  color: var(--couleur-texte-secondaire);
+}
+
+.tableau th,
+.tableau td {
+  padding: 0.35rem 0.75rem;
+  border-bottom: 1px solid var(--couleur-bordure);
+  text-align: left;
+}
+
+.tableau td {
+  font-variant-numeric: tabular-nums; /* chiffres alignés */
+}

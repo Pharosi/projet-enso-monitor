@@ -1,0 +1,58 @@
+.filtre {
+  display: flex;
+  flex-wrap: wrap; /* sur mobile, les champs passent à la ligne */
+  align-items: flex-end;
+  gap: var(--espace);
+}
+
+.aide {
+  flex-basis: 100%;
+  margin: 0;
+  color: var(--couleur-texte-secondaire);
+  font-size: 0.875rem;
+}
+
+.filtre label {
+  display: grid;
+  gap: 0.25rem;
+  font-weight: 600;
+}
+
+.filtre input {
+  min-height: 2.75rem; /* cible tactile confortable */
+  padding: 0.5rem;
+  border: 1px solid var(--couleur-bordure);
+  border-radius: var(--rayon);
+  font: inherit;
+}
+
+.boutons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.boutons button {
+  min-height: 2.75rem;
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--couleur-principale);
+  border-radius: var(--rayon);
+  background: var(--couleur-surface);
+  color: var(--couleur-principale);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.boutons button[type='submit'] {
+  background: var(--couleur-principale);
+  color: #fff;
+}
+
+.erreur {
+  flex-basis: 100%;
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--rayon);
+  background: var(--couleur-erreur-fond);
+  color: var(--couleur-erreur-texte);
+}
