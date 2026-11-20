@@ -18,7 +18,8 @@
   font-weight: 600;
 }
 
-.filtre input {
+.filtre input,
+.filtre select {
   min-height: 2.75rem; /* cible tactile confortable */
   padding: 0.5rem;
   border: 1px solid var(--couleur-bordure);

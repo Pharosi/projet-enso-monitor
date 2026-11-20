@@ -1,6 +1,7 @@
 // Composant racine : la structure de la page (en-tête, contenu, pied de page).
 
 import styles from './App.module.css'
+import { SectionComparaison } from './composants/SectionComparaison'
 import { SectionSerie } from './composants/SectionSerie'
 
 export default function App() {
@@ -17,6 +18,7 @@ export default function App() {
 
       <main id="contenu" className={styles.contenu}>
         <SectionSerie />
+        <SectionComparaison />
       </main>
 
       <footer className={styles.pied}>

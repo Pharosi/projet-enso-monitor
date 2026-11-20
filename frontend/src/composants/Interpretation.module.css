@@ -1,0 +1,23 @@
+.interpretation h3 {
+  margin: 1rem 0 0.5rem;
+  font-size: 1.1rem;
+}
+
+.interpretation ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.interpretation li + li {
+  margin-top: 0.35rem;
+}
+
+.regles {
+  margin: 0.75rem 0 0;
+  color: var(--couleur-texte-secondaire);
+  font-size: 0.875rem;
+}
+
+.limites {
+  color: var(--couleur-texte-secondaire);
+}
