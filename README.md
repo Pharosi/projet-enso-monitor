@@ -44,6 +44,7 @@ projet-enso-monitor/
 │       ├── services/api.ts # seul point d'accès à l'API (fetch)
 │       ├── types/api.ts    # types des réponses de l'API
 │       └── tests/          # tests Vitest + Testing Library
+├── deploy/                 # production : compose.yaml, Caddy, sauvegardes (voir deploy/README.md)
 ├── compose.yaml            # PostgreSQL pour le développement local
 └── .env.example            # modèle des variables d'environnement
 ```
@@ -93,7 +94,7 @@ L'ETL télécharge le fichier officiel, valide chaque ligne et enregistre les ob
 uvicorn enso.api.main:app --reload
 ```
 
-- Documentation interactive (OpenAPI) : http://localhost:8000/docs
+- Documentation interactive (OpenAPI) : http://localhost:8000/api/docs
 - Santé de l'API : http://localhost:8000/api/v1/sante
 
 #### Routes disponibles
@@ -154,6 +155,16 @@ npm run dev          # http://localhost:5173 (les appels /api sont relayés vers
 | `npm run lint`         | Analyse statique (oxlint)              |
 | `npm run format:check` | Vérification du formatage (Prettier)   |
 | `npm run build`        | Vérification des types et build de production |
+
+## Déploiement
+
+La production (VPS, Docker Compose, Caddy, HTTPS, sauvegardes, mises à jour) est décrite pas à pas dans [`deploy/README.md`](deploy/README.md). Démonstration locale :
+
+```bash
+cd deploy && cp .env.example .env   # DOMAINE=localhost et un mot de passe généré
+docker compose up -d --build && docker compose run --rm etl
+# https://localhost (certificat local auto-signé)
+```
 
 ## Données
 
