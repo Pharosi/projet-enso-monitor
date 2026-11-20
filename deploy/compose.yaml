@@ -1,0 +1,118 @@
+# Déploiement de production sur un VPS (une seule machine).
+#
+#                  Internet (80/443)
+#                         │
+#                ┌────────▼────────┐   réseau « public »
+#                │      caddy      │   HTTPS, frontend, /api/* → api
+#                └────────┬────────┘
+#   réseau « interne » ───┼──────────────────────────────── (sans accès Internet)
+#                ┌────────▼────────┐        ┌─────────────┐
+#                │       api       │───────▶│     db      │ PostgreSQL (aucun port publié)
+#                └─────────────────┘        └──────▲──────┘
+#                ┌─────────────────┐               │
+#                │ migration (1×)  │───────────────┤ alembic upgrade head au démarrage
+#                └─────────────────┘               │
+#                ┌─────────────────┐               │
+#                │ etl (à la demande, cron)────────┘ télécharge la NOAA (réseau « public »)
+#                └─────────────────┘
+#
+# Commandes (depuis le dossier deploy/) :
+#   docker compose up -d --build        démarrer / mettre à jour
+#   docker compose run --rm etl         importer les données NOAA
+#   docker compose logs -f api          suivre les journaux de l'API
+
+name: enso-monitor
+
+# Bloc commun aux trois services du backend : même image, même connexion à la base.
+x-backend: &backend
+  build: ../backend
+  image: enso-monitor-backend
+  environment:
+    URL_BASE_DE_DONNEES: postgresql+psycopg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+    ORIGINES_CORS: '["https://${DOMAINE}"]'
+
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - donnees_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks: [interne]
+
+  # Applique les migrations Alembic puis s'arrête ; l'API attend sa réussite.
+  migration:
+    <<: *backend
+    command: ["alembic", "upgrade", "head"]
+    restart: "no"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks: [interne]
+
+  api:
+    <<: *backend
+    restart: unless-stopped
+    depends_on:
+      migration:
+        condition: service_completed_successfully
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/sante', timeout=3)"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks: [interne]
+
+  # Worker ETL : ne démarre pas avec « up » (profil), lancé à la demande ou par cron.
+  etl:
+    <<: *backend
+    command: ["python", "-m", "enso.etl"]
+    restart: "no"
+    profiles: [etl]
+    depends_on:
+      migration:
+        condition: service_completed_successfully
+    networks: [interne, public] # « public » : accès sortant vers la NOAA
+
+  caddy:
+    build:
+      context: ..
+      dockerfile: deploy/caddy/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp" # HTTP/3
+    environment:
+      DOMAINE: ${DOMAINE}
+      EMAIL_ACME: ${EMAIL_ACME}
+    volumes:
+      - caddy_donnees:/data # certificats HTTPS (à conserver !)
+      - caddy_config:/config
+    depends_on:
+      api:
+        condition: service_healthy
+    networks: [interne, public]
+
+networks:
+  interne:
+    internal: true # aucun accès Internet : la base n'est joignable que par l'API et l'ETL
+  public: {}
+
+volumes:
+  donnees_postgres:
+  caddy_donnees:
+  caddy_config:
