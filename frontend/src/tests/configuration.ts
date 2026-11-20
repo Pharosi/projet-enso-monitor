@@ -8,3 +8,12 @@ import { afterEach } from 'vitest'
 afterEach(() => {
   cleanup()
 })
+
+// jsdom ne fournit pas ResizeObserver, utilisé par ResponsiveContainer (Recharts).
+// Ce substitut minimal suffit : les tests vérifient les valeurs, pas le dessin.
+class ResizeObserverDeTest {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+globalThis.ResizeObserver ??= ResizeObserverDeTest as unknown as typeof ResizeObserver
