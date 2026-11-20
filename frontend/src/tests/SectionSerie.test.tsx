@@ -3,7 +3,7 @@
 // L'API est simulée (vi.mock) : le test vérifie le comportement de l'interface,
 // indépendamment du backend. Valeurs issues du fichier NOAA réel (ONI v6).
 
-import { fireEvent, render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { SectionSerie } from '../composants/SectionSerie'
@@ -42,6 +42,17 @@ const ANNEE_1998 = serie([
   observation('NDJ', 1998, '12', -1.47),
 ])
 
+/** Choisit un mois et une année dans les listes du filtre (même geste dans tous les navigateurs). */
+async function choisir(
+  utilisateur: ReturnType<typeof userEvent.setup>,
+  borne: 'début' | 'fin',
+  mois: string,
+  annee: string,
+) {
+  await utilisateur.selectOptions(screen.getByLabelText(`Mois de ${borne}`), mois)
+  await utilisateur.selectOptions(screen.getByLabelText(`Année de ${borne}`), annee)
+}
+
 describe('SectionSerie', () => {
   beforeEach(() => {
     vi.mocked(recupererObservations).mockReset()
@@ -58,9 +69,9 @@ describe('SectionSerie', () => {
     expect(await screen.findByText(/3 saisons, de DJF 1950 à ASO 2026/)).toBeInTheDocument()
     expect(screen.getByText(/Maximum \+2,59 °C \(NDJ 2015\)/)).toBeInTheDocument()
 
-    // 2. L'utilisateur choisit l'année 1998 puis valide.
-    fireEvent.change(screen.getByLabelText('Début'), { target: { value: '1998-01' } })
-    fireEvent.change(screen.getByLabelText('Fin'), { target: { value: '1998-12' } })
+    // 2. L'utilisateur choisit janvier 1998 → décembre 1998 puis valide.
+    await choisir(utilisateur, 'début', 'janvier', '1998')
+    await choisir(utilisateur, 'fin', 'décembre', '1998')
     await utilisateur.click(screen.getByRole('button', { name: 'Afficher' }))
 
     // 3. La bonne période est demandée à l'API…
@@ -80,12 +91,37 @@ describe('SectionSerie', () => {
     render(<SectionSerie />)
     await screen.findByText(/3 saisons/)
 
-    fireEvent.change(screen.getByLabelText('Début'), { target: { value: '1999-01' } })
-    fireEvent.change(screen.getByLabelText('Fin'), { target: { value: '1998-01' } })
+    await choisir(utilisateur, 'début', 'janvier', '1999')
+    await choisir(utilisateur, 'fin', 'janvier', '1998')
     await utilisateur.click(screen.getByRole('button', { name: 'Afficher' }))
 
     expect(screen.getByRole('alert')).toHaveTextContent('Le mois de début doit précéder')
     expect(recupererObservations).toHaveBeenCalledTimes(1) // seulement le chargement initial
+  })
+
+  // Non-régression de l'anomalie #44 : Safari affichait un champ texte libre.
+  it('ne propose aucun champ de date à saisir librement', async () => {
+    vi.mocked(recupererObservations).mockResolvedValue(SERIE_COMPLETE)
+    const { container } = render(<SectionSerie />)
+    await screen.findByText(/3 saisons/)
+
+    const formulaire = container.querySelector('form') as HTMLFormElement
+    expect(within(formulaire).queryAllByRole('textbox')).toHaveLength(0)
+    expect(formulaire.querySelectorAll('input')).toHaveLength(0)
+    expect(within(formulaire).getAllByRole('combobox')).toHaveLength(4) // mois et année × 2
+  })
+
+  it("refuse un mois choisi sans année, sans appeler l'API", async () => {
+    const utilisateur = userEvent.setup()
+    vi.mocked(recupererObservations).mockResolvedValue(SERIE_COMPLETE)
+    render(<SectionSerie />)
+    await screen.findByText(/3 saisons/)
+
+    await utilisateur.selectOptions(screen.getByLabelText('Mois de début'), 'mars')
+    await utilisateur.click(screen.getByRole('button', { name: 'Afficher' }))
+
+    expect(screen.getByRole('alert')).toHaveTextContent('Début : choisissez le mois et l’année')
+    expect(recupererObservations).toHaveBeenCalledTimes(1)
   })
 
   it("affiche le message de l'API en cas d'erreur", async () => {
