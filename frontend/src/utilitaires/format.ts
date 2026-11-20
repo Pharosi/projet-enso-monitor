@@ -36,8 +36,3 @@ export function formaterGraduationValeur(valeur: number): string {
 export function formaterDate(dateIso: string): string {
   return new Date(dateIso).toLocaleDateString('fr-FR')
 }
-
-/** Valeur d'un champ <input type="month"> ("1998-01") -> date de période ("1998-01-01"). */
-export function moisVersDate(mois: string): string {
-  return mois === '' ? '' : `${mois}-01`
-}
