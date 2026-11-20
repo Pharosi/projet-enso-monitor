@@ -14,6 +14,10 @@ export default function App() {
       <header className={styles.entete}>
         <h1>ENSO Monitor</h1>
         <p>Explorer l'indice ONI de la NOAA et comparer des épisodes El Niño et La Niña.</p>
+        <nav aria-label="Sections de la page" className={styles.navigation}>
+          <a href="#titre-serie">Évolution de l'ONI</a>
+          <a href="#titre-comparaison">Comparer deux épisodes</a>
+        </nav>
       </header>
 
       <main id="contenu" className={styles.contenu}>
