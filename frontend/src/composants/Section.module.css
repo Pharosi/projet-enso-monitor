@@ -1,0 +1,25 @@
+/* Style commun aux sections de la page (série, comparaison). */
+
+.section {
+  display: grid;
+  gap: var(--espace);
+  padding: calc(var(--espace) * 1.5);
+  border: 1px solid var(--couleur-bordure);
+  border-radius: var(--rayon);
+  background: var(--couleur-surface);
+}
+
+.section h2 {
+  margin: 0;
+}
+
+.resume {
+  margin: 0;
+  font-weight: 500;
+}
+
+@media (max-width: 40rem) {
+  .section {
+    padding: var(--espace);
+  }
+}

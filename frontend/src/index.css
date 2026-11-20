@@ -1,0 +1,66 @@
+/* Styles globaux : couleurs, typographie et mise en page de base.
+   Les couleurs sont des variables CSS : un seul endroit à modifier, contrastes vérifiés
+   (texte sur fond ≥ 4,5:1, exigence WCAG AA). */
+
+:root {
+  --couleur-fond: #f7f9fb;
+  --couleur-surface: #ffffff;
+  --couleur-texte: #1b2631; /* contraste ~15:1 sur le fond */
+  --couleur-texte-secondaire: #4a5868; /* ~7:1 */
+  --couleur-bordure: #c9d3dd;
+  --couleur-principale: #0b4f6c; /* bleu océan, ~9:1 */
+  --couleur-el-nino: #b03a2e; /* rouge : phase chaude, ~6:1 */
+  --couleur-la-nina: #1f5f99; /* bleu : phase froide, ~7:1 */
+  --couleur-seuil: #6b7785;
+  --couleur-erreur-fond: #fdecea;
+  --couleur-erreur-texte: #8a1c12;
+  --couleur-focus: #b45309; /* orange foncé : contour de focus ~5:1 (WCAG 1.4.11 : 3:1) */
+  --rayon: 8px;
+  --espace: 1rem;
+
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  line-height: 1.5;
+  color: var(--couleur-texte);
+  background: var(--couleur-fond);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+/* Focus toujours visible pour la navigation au clavier. */
+:focus-visible {
+  outline: 3px solid var(--couleur-focus);
+  outline-offset: 2px;
+}
+
+a {
+  color: var(--couleur-principale);
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+}
+
+/* Texte réservé aux lecteurs d'écran (invisible à l'écran, lu par les technologies d'assistance). */
+.visuellement-cache {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

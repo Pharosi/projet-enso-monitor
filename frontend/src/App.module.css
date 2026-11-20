@@ -1,0 +1,61 @@
+/* CSS Module : ces classes ne s'appliquent qu'au composant App (pas de conflit de noms). */
+
+.page {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: var(--espace);
+}
+
+.entete {
+  padding-bottom: var(--espace);
+  border-bottom: 1px solid var(--couleur-bordure);
+}
+
+.entete h1 {
+  margin: 0 0 0.25rem;
+  color: var(--couleur-principale);
+}
+
+.entete p {
+  margin: 0;
+  color: var(--couleur-texte-secondaire);
+}
+
+.navigation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin-top: 0.75rem;
+}
+
+.navigation a {
+  padding: 0.25rem 0;
+  font-weight: 600;
+}
+
+.contenu {
+  display: grid;
+  gap: calc(var(--espace) * 2);
+  padding: calc(var(--espace) * 1.5) 0;
+}
+
+.pied {
+  border-top: 1px solid var(--couleur-bordure);
+  color: var(--couleur-texte-secondaire);
+  font-size: 0.875rem;
+}
+
+/* Lien d'évitement : invisible tant qu'il n'a pas le focus clavier (touche Tab). */
+.lienEvitement {
+  position: absolute;
+  left: -999px;
+}
+
+.lienEvitement:focus {
+  left: var(--espace);
+  top: var(--espace);
+  padding: 0.5rem 1rem;
+  background: var(--couleur-surface);
+  border-radius: var(--rayon);
+  z-index: 10;
+}

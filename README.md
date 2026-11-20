@@ -37,7 +37,13 @@ projet-enso-monitor/
 │   ├── alembic/            # migrations du schéma PostgreSQL
 │   ├── tests/
 │   └── pyproject.toml      # dépendances et configuration des outils
-├── frontend/               # application React (à venir)
+├── frontend/               # application React + TypeScript (Vite)
+│   └── src/
+│       ├── composants/     # composants d'interface réutilisables
+│       ├── hooks/          # logique d'état et de chargement (useObservations…)
+│       ├── services/api.ts # seul point d'accès à l'API (fetch)
+│       ├── types/api.ts    # types des réponses de l'API
+│       └── tests/          # tests Vitest + Testing Library
 ├── compose.yaml            # PostgreSQL pour le développement local
 └── .env.example            # modèle des variables d'environnement
 ```
@@ -134,6 +140,21 @@ Toutes les erreurs ont le même format :
 
 L'API n'accepte les appels navigateur (CORS) que depuis les origines listées dans `ORIGINES_CORS` (par défaut le frontend local `http://localhost:5173`), et uniquement en lecture (`GET`).
 
+### 6. Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev          # http://localhost:5173 (les appels /api sont relayés vers l'API sur le port 8000)
+```
+
+| Commande               | Rôle                                   |
+| ---------------------- | -------------------------------------- |
+| `npm test`             | Tests Vitest                           |
+| `npm run lint`         | Analyse statique (oxlint)              |
+| `npm run format:check` | Vérification du formatage (Prettier)   |
+| `npm run build`        | Vérification des types et build de production |
+
 ## Données
 
 | Élément              | Valeur                                                                                             |
@@ -177,7 +198,7 @@ ruff check .          # analyse statique
 ruff format .         # formatage
 ```
 
-> Les instructions de lancement du frontend seront complétées au fil du développement.
+
 
 ## Conventions du projet
 
@@ -208,6 +229,8 @@ fix(api): rejeter une période dont la date de début suit la date de fin
 ### Code
 
 Les identifiants (variables, fonctions, classes, tables) sont écrits en français, sans accents. L'anglais est conservé uniquement lorsque le langage ou le framework l'impose (mots-clés, API des bibliothèques, hooks React `use…`).
+
+Chaque langage garde sa convention de casse : `snake_case` en Python (`lister_mesures`), `camelCase` en TypeScript (`recupererObservations`), `PascalCase` pour les classes et les composants React (`GraphiqueOni`).
 
 ### Suivi du projet
 
