@@ -1,0 +1,11 @@
+# Contexte de construction de l'image Caddy (racine du dépôt) : on n'envoie que le nécessaire.
+**/node_modules
+**/dist
+**/.venv
+**/__pycache__
+.git
+.github
+notes-etude
+docs
+.env
+**/.env

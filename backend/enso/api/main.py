@@ -36,6 +36,10 @@ def creer_application() -> FastAPI:
         description=DESCRIPTION,
         version="0.2.0",
         openapi_tags=TAGS,
+        # Documentation sous /api : en production, Caddy ne relaie vers l'API que /api/*.
+        docs_url="/api/docs",
+        openapi_url="/api/openapi.json",
+        redoc_url=None,
     )
 
     # CORS : seul le frontend déclaré peut appeler l'API depuis un navigateur,
