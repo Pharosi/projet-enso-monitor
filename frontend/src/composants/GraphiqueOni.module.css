@@ -50,3 +50,18 @@
 .symboleLaNina {
   border-top: 3px dashed var(--couleur-la-nina);
 }
+
+/* Symboles de la comparaison : épisode B en pointillés longs, seuils en pointillés gris. */
+.symboleCourbeB,
+.symboleSeuils {
+  display: inline-block;
+  width: 1.75rem;
+}
+
+.symboleCourbeB {
+  border-top: 3px dashed var(--couleur-el-nino);
+}
+
+.symboleSeuils {
+  border-top: 3px dashed var(--couleur-seuil);
+}
