@@ -1,0 +1,9 @@
+# Anomalie #36 — APRÈS correction — 20/11/2026 12:21
+$ npx vitest run src/tests/contrastes.test.ts
+ ✓ src/tests/contrastes.test.ts > Contrastes des couleurs de index.css > le contour de focus est visible sur couleur-fond (≥ 3:1) 0ms
+ ✓ src/tests/contrastes.test.ts > Contrastes des couleurs de index.css > le contour de focus est visible sur couleur-surface (≥ 3:1) 0ms
+      Tests  14 passed (14)
+
+$ npm test (non-régression complète)
+ Test Files  5 passed (5)
+      Tests  28 passed (28)

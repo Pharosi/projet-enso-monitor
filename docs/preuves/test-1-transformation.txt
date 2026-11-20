@@ -1,0 +1,20 @@
+# Test minimal n°1 — transformation Python des observations NOAA
+# Exécuté le 20/11/2026 14:29 (Europe/Paris) sur le commit b725374 (branche develop)
+# Environnement : Python 3.14.10, PostgreSQL 17 (Docker)
+
+$ cd backend && pytest -v tests/test_transformation.py
+collecting ... collected 11 items
+
+tests/test_transformation.py::test_une_ligne_valide_devient_une_mesure PASSED [  9%]
+tests/test_transformation.py::test_la_date_correspond_au_mois_central_de_la_saison PASSED [ 18%]
+tests/test_transformation.py::test_les_doublons_sont_supprimes_et_comptes PASSED [ 27%]
+tests/test_transformation.py::test_une_ligne_invalide_est_rejetee_sans_bloquer_les_autres[XYZ 1998  28.85   2.22] PASSED [ 36%]
+tests/test_transformation.py::test_une_ligne_invalide_est_rejetee_sans_bloquer_les_autres[DJF 19A8  28.85   2.22] PASSED [ 45%]
+tests/test_transformation.py::test_une_ligne_invalide_est_rejetee_sans_bloquer_les_autres[DJF 1949  28.85   2.22] PASSED [ 54%]
+tests/test_transformation.py::test_une_ligne_invalide_est_rejetee_sans_bloquer_les_autres[DJF 1998.5  28.85   2.22] PASSED [ 63%]
+tests/test_transformation.py::test_une_ligne_invalide_est_rejetee_sans_bloquer_les_autres[DJF 1998  28.85   abc] PASSED [ 72%]
+tests/test_transformation.py::test_une_ligne_invalide_est_rejetee_sans_bloquer_les_autres[DJF 1998  28.85   9.99] PASSED [ 81%]
+tests/test_transformation.py::test_un_fichier_sans_les_colonnes_attendues_est_refuse PASSED [ 90%]
+tests/test_transformation.py::test_extrait_reel_noaa_1997_1998 PASSED    [100%]
+
+============================== 11 passed in 0.05s ==============================
