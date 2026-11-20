@@ -192,6 +192,8 @@ Les tests d'intégration utilisent une base dédiée `enso_test`, créée automa
 
 ## Qualité du code
 
+L'intégration continue (GitHub Actions, `.github/workflows/ci.yml`) vérifie chaque pull request : lint, formatage, migrations (`alembic upgrade head` puis `alembic check` sur une vraie base PostgreSQL), tests backend et frontend, build de production.
+
 ```bash
 cd backend
 ruff check .          # analyse statique
