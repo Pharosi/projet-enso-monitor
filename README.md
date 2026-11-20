@@ -216,7 +216,7 @@ Le terme « Super El Niño » n'est pas utilisé : il n'a pas de définition sci
 
 ```bash
 cd backend && pytest -v       # 47 tests (PostgreSQL démarré pour les tests d'intégration)
-cd frontend && npm test       # 28 tests
+cd frontend && npm test       # 30 tests
 ```
 
 Les tests d'intégration du backend utilisent une base dédiée `enso_test`, créée automatiquement ; la base de développement n'est jamais modifiée.
@@ -227,7 +227,7 @@ Les tests d'intégration du backend utilisent une base dédiée `enso_test`, cr�
 | ---------- | ------- | ------------ | -------- |
 | **n°1 — Données** : transformation Python sur des observations NOAA | `backend/tests/test_transformation.py` | doublons supprimés et comptés, saison/année/anomalie invalides rejetées, extrait réel 1997-1998 | 11 réussis |
 | **n°2 — API** : route filtrée par période, réponse attendue et entrée invalide | `backend/tests/test_api_observations.py` | 1998 → 12 observations attendues, 4 entrées invalides → 422, aucune donnée → 404 | 7 réussis |
-| **n°3 — Frontend** : un changement de période actualise la courbe ou les valeurs | `frontend/src/tests/SectionSerie.test.tsx` | saisie 1998, appel API avec la bonne période, nouveau résumé affiché | 4 réussis |
+| **n°3 — Frontend** : un changement de période actualise la courbe ou les valeurs | `frontend/src/tests/SectionSerie.test.tsx` | choix janvier → décembre 1998, appel API avec la bonne période, nouveau résumé affiché ; aucune saisie libre (anomalie #44) | 6 réussis |
 
 ### Autres tests
 
