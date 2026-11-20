@@ -1,0 +1,14 @@
+# Test minimal n°3 — un changement de période actualise les valeurs affichées
+# Exécuté le 20/11/2026 15:19 (Europe/Paris) sur le commit acf0480 (branche develop)
+# Environnement : Node v26.13.1, Vitest 5.1.1
+
+$ cd frontend && npx vitest run --reporter=verbose src/tests/SectionSerie.test.tsx
+ ✓ src/tests/SectionSerie.test.tsx > SectionSerie > actualise les valeurs affichées quand la période change 207ms
+ ✓ src/tests/SectionSerie.test.tsx > SectionSerie > refuse une période inversée sans appeler l'API 80ms
+ ✓ src/tests/SectionSerie.test.tsx > SectionSerie > ne propose aucun champ de date à saisir librement 28ms
+ ✓ src/tests/SectionSerie.test.tsx > SectionSerie > refuse un mois choisi sans année, sans appeler l'API 42ms
+ ✓ src/tests/SectionSerie.test.tsx > SectionSerie > affiche le message de l'API en cas d'erreur 9ms
+ ✓ src/tests/SectionSerie.test.tsx > SectionSerie > affiche la source, la version et la date d’extraction 26ms
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Duration  1.37s (tests 33%, environment 33%, import 24%, setup 8%, transform 2%)

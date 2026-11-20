@@ -243,7 +243,7 @@ Les tests d'intégration du backend utilisent une base dédiée `enso_test`, cr�
 | `frontend/src/tests/accessibilite.test.tsx` | audit axe-core (0 violation), structure, nom accessible des graphiques |
 | `frontend/src/tests/contrastes.test.ts` | non-régression de l'anomalie #36 : contraste de toutes les couleurs (WCAG) |
 
-L'intégration continue exécute l'ensemble à chaque pull request (voir ci-dessous).
+L'intégration continue exécute l'ensemble à chaque pull request (voir ci-dessous). Les sorties d'exécution (trois tests minimaux, suites complètes, anomalie #36, déploiement local) sont conservées dans [`docs/preuves/`](docs/preuves/).
 
 ## Qualité et sécurité
 
