@@ -1,7 +1,7 @@
 // Composant racine : la structure de la page (en-tête, contenu, pied de page).
-// Les sections (courbe ONI, comparaison) sont ajoutées dans les étapes suivantes.
 
 import styles from './App.module.css'
+import { SectionSerie } from './composants/SectionSerie'
 
 export default function App() {
   return (
@@ -16,7 +16,7 @@ export default function App() {
       </header>
 
       <main id="contenu" className={styles.contenu}>
-        <p>Application en cours de construction.</p>
+        <SectionSerie />
       </main>
 
       <footer className={styles.pied}>

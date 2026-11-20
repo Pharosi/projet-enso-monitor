@@ -1,0 +1,52 @@
+.figure {
+  margin: 0;
+}
+
+.legende {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+/* Hauteur fixe : ResponsiveContainer occupe toute la largeur et cette hauteur. */
+.zone {
+  height: 22rem;
+}
+
+@media (max-width: 40rem) {
+  .zone {
+    height: 16rem;
+  }
+}
+
+.legendeSymboles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.875rem;
+}
+
+.legendeSymboles li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Petits traits reproduisant le style de chaque ligne du graphique. */
+.symboleCourbe,
+.symboleElNino,
+.symboleLaNina {
+  display: inline-block;
+  width: 1.75rem;
+  border-top: 3px solid var(--couleur-principale);
+}
+
+.symboleElNino {
+  border-top: 3px dashed var(--couleur-el-nino);
+}
+
+.symboleLaNina {
+  border-top: 3px dashed var(--couleur-la-nina);
+}
