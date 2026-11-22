@@ -1,0 +1,16 @@
+# Preuve — démonstration locale de la production (Docker Compose + Caddy) — 20/11/2026 12:33
+SERVICE   STATUS                        PORTS
+api       Up About a minute (healthy)   8000/tcp
+caddy     Up About a minute             0.0.0.0:80->80/tcp, [::]:80->80/tcp, 0.0.0.0:443->443/tcp, [::]:443->443/tcp, 0.0.0.0:443->443/udp, [::]:443->443/udp
+db        Up About a minute (healthy)   5432/tcp
+
+$ curl -k https://localhost/api/v1/sante
+{"statut":"ok","base_de_donnees":"ok"}
+$ curl -kI https://localhost/
+HTTP/2 200 
+content-security-policy: default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; frame-ancestors 'none'
+referrer-policy: strict-origin-when-cross-origin
+strict-transport-security: max-age=31536000; includeSubDomains
+x-content-type-options: nosniff
+$ docker compose run --rm etl
+INFO Import n°2 réussi : 921 lues, 0 insérées, 0 mises à jour, 921 inchangées, 0 ignorées
