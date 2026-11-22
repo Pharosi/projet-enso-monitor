@@ -158,8 +158,18 @@
     <div class="encadre"><strong>Dans le MVP</strong><ul><li>import ONI traçable et sans doublon</li><li>API de consultation filtrée et de comparaison</li><li>courbe, filtre, comparaison, interprétation, limites</li><li>accessibilité, responsive, états d'erreur</li><li>tests, intégration continue, déploiement documenté</li></ul></div>
     <div class="encadre"><strong>Hors périmètre (choix assumés)</strong><ul><li>prévision climatique (exclue par le sujet)</li><li>administration et comptes utilisateurs</li><li>second indice (RONI) et données ERA5</li><li>détection automatique de tous les épisodes</li><li>cartographie, exports</li></ul></div>
   </div>
+  <div style="break-inside: avoid">
+  <h3>Choix de l'indice : ONI plutôt que RONI</h3>
+  <p>Le sujet autorise l'un ou l'autre. Les deux indices sont aussi fiables : ils reposent sur les mêmes mesures de la NOAA (ERSST v6), mais ne répondent pas à la même question.</p>
+  <table>
+    <tr><th></th><th>ONI</th><th>RONI</th></tr>
+    <tr><td><strong>Question</strong></td><td>De combien la région Niño 3.4 est-elle plus chaude que la normale ?</td><td>De combien la région Niño 3.4 est-elle plus chaude que le reste de l'océan tropical ?</td></tr>
+    <tr><td><strong>Adapté à</strong></td><td>l'analyse historique : le tableau officiel des épisodes de la NOAA depuis 1950 est construit avec lui, les chiffres sont donc vérifiables</td><td>la surveillance de l'épisode en cours, sans l'effet du réchauffement de fond ; indice officiel de la NOAA depuis 2026</td></tr>
+  </table>
+  </div>
+  <p>L'application étant un outil d'analyse historique, l'ONI a été retenu. Conséquence : une partie de l'écart entre des épisodes éloignés peut venir du réchauffement de fond ; cette limite est affichée avec chaque comparaison.</p>
   <h3>Limites du sujet</h3>
-  <p>L'ONI mesure une seule région du Pacifique : il ne dit rien des <strong>impacts</strong> (pluies, sécheresses). Il ne retire pas la tendance au réchauffement global : depuis 2026, la NOAA utilise le <strong>RONI</strong> pour la surveillance officielle. L'application est un outil d'<strong>analyse historique</strong> ; ces limites sont affichées à l'utilisateur avec chaque comparaison. Enfin, « Super El Niño » n'étant pas une classe scientifique, l'application ne l'emploie pas.</p>
+  <p>L'ONI mesure une seule région du Pacifique : il ne dit rien des <strong>impacts</strong> (pluies, sécheresses). Il ne retire pas la tendance au réchauffement global, que corrige le <strong>RONI</strong> (voir ci-dessus). L'application est un outil d'<strong>analyse historique</strong> ; ces limites sont affichées à l'utilisateur avec chaque comparaison. Enfin, « Super El Niño » n'étant pas une classe scientifique, l'application ne l'emploie pas.</p>
 </section>
 
 <!-- ============================ 2. FONCTIONNEL ============================ -->

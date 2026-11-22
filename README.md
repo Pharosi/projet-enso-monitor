@@ -168,8 +168,18 @@ Production : `deploy/.env` (modèle `deploy/.env.example`), voir [`deploy/README
 
 - La version a été **vérifiée à la source** : les valeurs du fichier correspondent à la table officielle ONI v6, et non à la v5.
 - La NOAA prévient que les **deux derniers mois peuvent être révisés** : l'ETL met à jour une valeur qui change.
-- Depuis 2026, la NOAA utilise le **RONI** (*Relative ONI*) pour la surveillance officielle de l'ENSO. Ce projet, consacré à l'**analyse historique**, utilise l'ONI, comme le sujet l'autorise.
 - Un **extrait authentique** (1997-1998, 24 saisons) est versionné dans `backend/tests/donnees/` : les tests ne dépendent pas d'Internet.
+
+### Pourquoi l'ONI plutôt que le RONI ?
+
+Le sujet autorise l'un ou l'autre. Les deux indices sont aussi fiables — mêmes mesures de la NOAA (ERSST v6) — mais ne répondent pas à la même question :
+
+| | ONI | RONI (*Relative ONI*) |
+| - | --- | --- |
+| Question | De combien la région Niño 3.4 est-elle plus chaude que la normale ? | De combien la région Niño 3.4 est-elle plus chaude que le reste de l'océan tropical ? |
+| Adapté à | l'**analyse historique** : le tableau officiel des épisodes de la NOAA depuis 1950 est construit avec lui, les chiffres sont donc vérifiables | la **surveillance de l'épisode en cours**, sans l'effet du réchauffement de fond ; indice officiel de la NOAA depuis 2026 |
+
+Ce projet étant consacré à l'analyse historique, il utilise l'ONI. Conséquence : une partie de l'écart entre des épisodes éloignés peut venir du réchauffement de fond ; cette limite est affichée avec chaque comparaison (voir [Limites connues](#limites-connues)).
 
 ## API
 
