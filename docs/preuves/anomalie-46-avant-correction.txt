@@ -1,0 +1,44 @@
+# Anomalie #46 — avant correction (test écrit d'abord, il échoue)
+# Commande : cd frontend && npx vitest run src/tests/graduations.test.ts
+# Date : 22/11/2026 20:01
+
+ RUN  v5.1.1 /Users/pharosi/Dev/GitHub/projet-enso-monitor/frontend
+ ❯ src/tests/graduations.test.ts (3 tests | 3 failed) 4ms
+   ❯ choisirGraduationsDates (3)
+     × place une graduation par année sur une période de quatre ans, sans répétition 2ms
+     × espace les graduations de dix ans sur la série complète 1950-2026 0ms
+     × laisse le graphique choisir sur une période courte (étiquettes mois et année) 0ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  src/tests/graduations.test.ts > choisirGraduationsDates > place une graduation par année sur une période de quatre ans, sans répétition
+TypeError: choisirGraduationsDates is not a function
+ ❯ src/tests/graduations.test.ts:24:25
+     22|   it('place une graduation par année sur une période de quatre ans, sa…
+     23|     const dates = moisConsecutifs('1985-01', 48)
+     24|     const graduations = choisirGraduationsDates(dates)
+       |                         ^
+     25|
+     26|     expect(graduations).toEqual(['1985-01-01', '1986-01-01', '1987-01-…
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+ FAIL  src/tests/graduations.test.ts > choisirGraduationsDates > espace les graduations de dix ans sur la série complète 1950-2026
+TypeError: choisirGraduationsDates is not a function
+ ❯ src/tests/graduations.test.ts:32:25
+     30|   it('espace les graduations de dix ans sur la série complète 1950-202…
+     31|     const dates = moisConsecutifs('1950-01', 921)
+     32|     const graduations = choisirGraduationsDates(dates) ?? []
+       |                         ^
+     33|
+     34|     expect(etiquettes(dates, graduations)).toEqual([
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+ FAIL  src/tests/graduations.test.ts > choisirGraduationsDates > laisse le graphique choisir sur une période courte (étiquettes mois et année)
+TypeError: choisirGraduationsDates is not a function
+ ❯ src/tests/graduations.test.ts:49:12
+     47|     const dates = moisConsecutifs('1997-01', 24)
+     48|
+     49|     expect(choisirGraduationsDates(dates)).toBeUndefined()
+       |            ^
+     50|   })
+     51| })
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+ Test Files  1 failed (1)
+      Tests  3 failed (3)
+   Start at  20:01:04

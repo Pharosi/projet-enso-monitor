@@ -1,0 +1,22 @@
+# Anomalie #36 — AVANT correction (le test reproduit le bug) — 20/11/2026 12:21
+$ npx vitest run src/tests/contrastes.test.ts
+ ✓ src/tests/contrastes.test.ts > Calcul du contraste > donne 21:1 pour du noir sur du blanc (valeur de référence WCAG) 1ms
+ ✓ src/tests/contrastes.test.ts > Calcul du contraste > lit bien les couleurs de index.css (sinon les autres tests ne prouveraient rien) 0ms
+ × src/tests/contrastes.test.ts > Contrastes des couleurs de index.css > le contour de focus est visible sur couleur-fond (≥ 3:1) 2ms
+   → expected 1.9586672625421389 to be greater than or equal to 3
+ × src/tests/contrastes.test.ts > Contrastes des couleurs de index.css > le contour de focus est visible sur couleur-surface (≥ 3:1) 0ms
+   → expected 2.067131522489313 to be greater than or equal to 3
+ ✓ src/tests/contrastes.test.ts > Contrastes des couleurs de index.css > le texte couleur-texte est lisible sur couleur-fond (≥ 4,5:1, WCAG 1.4.3) 0ms
+ ✓ src/tests/contrastes.test.ts > Contrastes des couleurs de index.css > le texte couleur-texte est lisible sur couleur-surface (≥ 4,5:1, WCAG 1.4.3) 0ms
+ ✓ src/tests/contrastes.test.ts > Contrastes des couleurs de index.css > le texte couleur-texte-secondaire est lisible sur couleur-fond (≥ 4,5:1, WCAG 1.4.3) 0ms
+ ✓ src/tests/contrastes.test.ts > Contrastes des couleurs de index.css > le texte couleur-texte-secondaire est lisible sur couleur-surface (≥ 4,5:1, WCAG 1.4.3) 0ms
+ ✓ src/tests/contrastes.test.ts > Contrastes des couleurs de index.css > le texte couleur-principale est lisible sur couleur-fond (≥ 4,5:1, WCAG 1.4.3) 0ms
+ ✓ src/tests/contrastes.test.ts > Contrastes des couleurs de index.css > le texte couleur-principale est lisible sur couleur-surface (≥ 4,5:1, WCAG 1.4.3) 0ms
+ ✓ src/tests/contrastes.test.ts > Contrastes des couleurs de index.css > le message d’erreur est lisible sur son fond (≥ 4,5:1) 0ms
+ ✓ src/tests/contrastes.test.ts > Contrastes des couleurs de index.css > les traits du graphique couleur-el-nino se distinguent du fond (≥ 3:1) 0ms
+ ✓ src/tests/contrastes.test.ts > Contrastes des couleurs de index.css > les traits du graphique couleur-la-nina se distinguent du fond (≥ 3:1) 0ms
+ ✓ src/tests/contrastes.test.ts > Contrastes des couleurs de index.css > les traits du graphique couleur-seuil se distinguent du fond (≥ 3:1) 0ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: expected 1.9586672625421389 to be greater than or equal to 3
+AssertionError: expected 2.067131522489313 to be greater than or equal to 3
+      Tests  2 failed | 12 passed (14)

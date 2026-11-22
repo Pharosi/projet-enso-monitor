@@ -1,0 +1,14 @@
+# Anomalie #46 — après correction
+# Exécuté le 22/11/2026 20:03 (Europe/Paris), branche fix/46-graduations-axe-temps
+# Environnement : Node v26.13.1, Vitest 5.1.1
+
+$ cd frontend && npx vitest run --reporter=verbose src/tests/graduations.test.ts
+ ✓ src/tests/graduations.test.ts > choisirGraduationsDates > place une graduation par année sur une période de quatre ans, sans répétition 1ms
+ ✓ src/tests/graduations.test.ts > choisirGraduationsDates > espace les graduations de dix ans sur la série complète 1950-2026 0ms
+ ✓ src/tests/graduations.test.ts > choisirGraduationsDates > laisse le graphique choisir sur une période courte (étiquettes mois et année) 0ms
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+
+$ cd frontend && npm test   (suite complète)
+ Test Files  6 passed (6)
+      Tests  33 passed (33)

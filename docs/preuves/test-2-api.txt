@@ -1,0 +1,16 @@
+# Test minimal n°2 — route FastAPI filtrée par période et entrées invalides
+# Exécuté le 20/11/2026 15:19 (Europe/Paris) sur le commit acf0480 (branche develop)
+# Environnement : Python 3.14.10, PostgreSQL 17 (Docker)
+
+$ cd backend && pytest -v tests/test_api_observations.py
+collecting ... collected 7 items
+
+tests/test_api_observations.py::test_une_periode_valide_renvoie_les_observations_attendues PASSED [ 14%]
+tests/test_api_observations.py::test_la_reponse_indique_l_unite_et_la_source PASSED [ 28%]
+tests/test_api_observations.py::test_une_entree_invalide_renvoie_422[parametres0] PASSED [ 42%]
+tests/test_api_observations.py::test_une_entree_invalide_renvoie_422[parametres1] PASSED [ 57%]
+tests/test_api_observations.py::test_une_entree_invalide_renvoie_422[parametres2] PASSED [ 71%]
+tests/test_api_observations.py::test_une_entree_invalide_renvoie_422[parametres3] PASSED [ 85%]
+tests/test_api_observations.py::test_sans_donnees_importees_la_route_renvoie_404 PASSED [100%]
+
+============================== 7 passed in 0.31s ===============================

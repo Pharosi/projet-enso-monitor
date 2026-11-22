@@ -16,6 +16,7 @@ import {
 } from 'recharts'
 import type { Observation } from '../types/api'
 import {
+  choisirGraduationsDates,
   formaterAnomalie,
   formaterGraduationDate,
   formaterGraduationValeur,
@@ -33,6 +34,9 @@ const SEUIL_EL_NINO = 0.5
 const SEUIL_LA_NINA = -0.5
 
 export function GraphiqueOni({ observations, unite, idDescription }: Proprietes) {
+  // Une étiquette unique par graduation (anomalie #46).
+  const graduations = choisirGraduationsDates(observations.map((o) => o.date_periode))
+
   return (
     <figure
       className={styles.figure}
@@ -58,6 +62,8 @@ export function GraphiqueOni({ observations, unite, idDescription }: Proprietes)
             <CartesianGrid strokeDasharray="3 3" stroke="var(--couleur-bordure)" />
             <XAxis
               dataKey="date_periode"
+              ticks={graduations}
+              interval={graduations ? 0 : 'preserveEnd'}
               tickFormatter={(date: string) => formaterGraduationDate(date, observations.length)}
               minTickGap={24}
             />

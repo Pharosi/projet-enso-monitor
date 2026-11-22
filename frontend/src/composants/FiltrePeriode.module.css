@@ -12,10 +12,26 @@
   font-size: 0.875rem;
 }
 
+/* Un groupe « Début » ou « Fin » : la légende, puis les listes mois et année côte à côte. */
+.groupe {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.groupe legend {
+  padding: 0;
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+}
+
 .filtre label {
   display: grid;
   gap: 0.25rem;
-  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--couleur-texte-secondaire);
 }
 
 .filtre input,
