@@ -148,7 +148,7 @@
   </table>
   <h3>Contraintes</h3>
   <ul>
-    <li><strong>Temps</strong> : cinq jours, travail individuel, en parallèle d'un emploi du soir ; deux jours perdus au démarrage (section 5).</li>
+    <li><strong>Temps</strong> : sujet calibré pour cinq jours de travail, reçu début novembre ; projet individuel mené en parallèle d'un emploi du soir qui limitait mes disponibilités : dépôt créé le 3/11, puis développement concentré du 17 au 22/11, dont deux jours perdus au démarrage (section 5).</li>
     <li><strong>Technique imposée</strong> : React/TypeScript/Vite, FastAPI/Pydantic, PostgreSQL/SQLAlchemy/Alembic, ETL Python Pandas/NumPy, tests Pytest et Vitest, déploiement Docker Compose + Caddy documenté.</li>
     <li><strong>Scientifique</strong> : une seule série authentique (ONI <em>ou</em> RONI), source et version documentées, classification explicite (seuils, durée, indice), aucune prévision.</li>
     <li><strong>Financière</strong> : aucune dépense ; déploiement réel facultatif → démonstration locale complète.</li>
@@ -410,8 +410,10 @@ flowchart LR
     <tr><td>J6 Remise</td><td>#20 version v1.0.0, accès au dépôt, ZIP</td><td>22/11</td></tr>
   </table>
   <h3>Planning sur cinq jours : prévu et réalisé</h3>
+  <p>Le sujet a été reçu début novembre. Mon emploi du soir ne me laissant que peu de disponibilités, j'ai préparé le dépôt puis concentré le développement sur cinq jours.</p>
   <table>
     <tr><th>Jour</th><th>Prévu</th><th>Réalisé</th></tr>
+    <tr><td>3/11 → 16/11</td><td>préparation</td><td>analyse du sujet, création du dépôt (3/11) ; disponibilités limitées par l'emploi du soir</td></tr>
     <tr><td>Mar. 17/11</td><td>J1 — mise en place</td><td>backlog (20 issues), jalons, tableau, conventions, première PR</td></tr>
     <tr><td>Mer. 18/11</td><td>J2 — données et ETL</td><td><strong>aucun travail</strong> (contraintes personnelles) : risque réalisé</td></tr>
     <tr><td>Jeu. 19/11</td><td>J3 — API</td><td>J1 + J2 + J3 : structure, PostgreSQL, modèle, ETL, API, tests n°1 et n°2 — versions <strong>v0.1.0</strong> et <strong>v0.2.0</strong></td></tr>
@@ -538,12 +540,14 @@ networks:
   <p><strong>Outils</strong> : Claude (Anthropic) via Claude Code comme assistant de développement — architecture, code, tests, documentation, débogage, explications ; GitHub CLI pour automatiser la saisie du backlog et des pull requests. <strong>Parties principalement assistées</strong> : backend, ETL, API, frontend, tests, déploiement, documentation. <strong>Ma part</strong> : périmètre, priorités et planning ; validation de chaque décision ; relecture de chaque pull request ; vérification des sources ; étude de chaque partie du code. <strong>Limites constatées et corrigées</strong> : une hypothèse fausse sur la version de l'indice (ERSST.v5) corrigée en comparant les valeurs aux tables officielles ; un test d'accessibilité qui ne pouvait pas échouer, renforcé ; du code simplifié pour rester explicable (fonctions courtes, deux niveaux d'imbrication au plus, un seul modèle de chargement des données). L'IA accélère, mais chaque proposition doit être vérifiée.</p>
   <h3>Difficultés et corrections</h3>
   <ul>
-    <li><strong>Organisation</strong> : deux jours perdus → replanification, MVP priorisé, coupes prévues mais non nécessaires.</li>
+    <li><strong>Organisation</strong> : agenda contraint par l'emploi du soir, puis deux jours perdus au début du développement → replanification, MVP priorisé, coupes prévues mais non nécessaires.</li>
     <li><strong>Données</strong> : version de l'indice à établir (v6), RONI devenu officiel, révisions récentes de la NOAA → mises à jour gérées par l'ETL ; durée d'un épisode dépendante de la fenêtre → limite affichée.</li>
     <li><strong>Tests</strong> : un test « vert » ne prouve rien s'il ne peut pas échouer → chaque test sensible vérifié en échec ; un test qui échouait pour une mauvaise raison (CSS vide dans l'environnement de test) → corrigé et protégé par un contrôle.</li>
     <li><strong>Navigateurs</strong> : filtre de période inutilisable dans Safari, découvert en testant comme un utilisateur → anomalie #44 corrigée ; les tests automatiques ne remplacent pas un essai réel sur plusieurs navigateurs.</li>
     <li><strong>Environnement</strong> : proxy de développement perdu après des changements de branche → diagnostic par couches (API seule, puis via le proxy).</li>
   </ul>
+  <h3>Retour d'expérience</h3>
+  <p>Ce projet a été mené seul, en parallèle d'un emploi du soir qui limitait fortement mes disponibilités. La principale difficulté a été d'organiser mon agenda : après avoir créé le dépôt début novembre, j'ai concentré le développement sur cinq jours, dont deux ont été perdus dès le départ. J'ai appris à m'organiser : découper le sujet en tâches courtes, prioriser l'essentiel, définir à l'avance ce que je supprimerais si nécessaire — aucune coupe n'a finalement été nécessaire — et suivre l'avancement par les issues, les pull requests et les versions. Sur le plan technique, j'ai appris qu'un test qui passe ne prouve rien s'il ne peut pas échouer : j'ai donc vérifié chaque test important en le faisant d'abord échouer. J'ai utilisé l'IA générative, comme le sujet l'autorise, mais c'est en vérifiant la source que la version de l'indice a été corrigée, et en testant l'application comme un utilisateur, dans Safari, que j'ai découvert une anomalie que les tests automatisés n'avaient pas détectée. Si je recommençais, je réserverais du temps chaque semaine dès la réception du sujet et je testerais plus tôt sur plusieurs navigateurs. Ce projet m'a montré le développeur que je veux devenir : quelqu'un qui comprend, vérifie et justifie ce qu'il livre.</p>
   <h3>Perspectives</h3>
   <p>Passage au RONI (le modèle accepte un second indice), détection automatique des épisodes, carte de situation actuelle, cache HTTP et chargement différé du graphique, tests de bout en bout avec Playwright.</p>
   <h3>Sources</h3>
