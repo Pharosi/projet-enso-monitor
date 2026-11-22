@@ -1,6 +1,6 @@
 [project]
 name = "enso-monitor"
-version = "0.2.0"
+version = "1.0.0"
 description = "API et ETL de la plateforme ENSO Monitor (indice ONI de la NOAA)"
 requires-python = ">=3.13"
 # Bornes : version testée minimale, majeure suivante exclue (évite une rupture d'API).

@@ -34,7 +34,7 @@ def creer_application() -> FastAPI:
     application = FastAPI(
         title="ENSO Monitor API",
         description=DESCRIPTION,
-        version="0.2.0",
+        version="1.0.0",
         openapi_tags=TAGS,
         # Documentation sous /api : en production, Caddy ne relaie vers l'API que /api/*.
         docs_url="/api/docs",
