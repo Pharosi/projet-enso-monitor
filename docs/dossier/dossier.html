@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>ENSO Monitor — Dossier de conception</title>
+<style>
+  @page {
+    size: A4;
+    margin: 15mm 15mm 16mm 15mm;
+    @bottom-left { content: "ENSO Monitor — Dossier de conception"; font: 8pt system-ui, sans-serif; color: #6b7785; }
+    @bottom-right { content: counter(page) " / " counter(pages); font: 8pt system-ui, sans-serif; color: #6b7785; }
+  }
+  @page :first { @bottom-left { content: none; } @bottom-right { content: none; } }
+
+  :root { --principale: #0b4f6c; --texte: #1b2631; --secondaire: #4a5868; --bordure: #c9d3dd; --fond: #f2f5f8; --accent: #b45309; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 9.6pt/1.42 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--texte); }
+  h1, h2, h3 { color: var(--principale); line-height: 1.2; break-after: avoid; }
+  h2 { font-size: 15pt; margin: 0 0 6px; padding-bottom: 4px; border-bottom: 2px solid var(--principale); }
+  h3 { font-size: 11pt; margin: 10px 0 4px; }
+  p { margin: 0 0 6px; }
+  ul, ol { margin: 0 0 6px; padding-left: 16px; }
+  li { margin: 1px 0; }
+  table { width: 100%; border-collapse: collapse; margin: 4px 0 8px; font-size: 8.3pt; break-inside: auto; }
+  th, td { border: 1px solid var(--bordure); padding: 3px 5px; text-align: left; vertical-align: top; }
+  th { background: var(--fond); color: var(--principale); }
+  tr { break-inside: avoid; }
+  table.bloc { break-inside: avoid; }
+  thead { display: table-header-group; }
+  code { font: 8.3pt ui-monospace, Menlo, monospace; background: var(--fond); padding: 0 3px; border-radius: 3px; }
+  pre.code { font: 7.6pt/1.35 ui-monospace, Menlo, monospace; background: var(--fond); border: 1px solid var(--bordure); border-radius: 4px; padding: 6px 8px; margin: 4px 0 8px; white-space: pre-wrap; break-inside: avoid; }
+  .section { margin-top: 12px; }
+  .nouvelle-page { break-before: page; }
+  .figure svg { width: auto !important; max-width: 100% !important; height: auto !important; }
+  .h55 svg { max-height: 55mm; } .h70 svg { max-height: 70mm; } .h85 svg { max-height: 85mm; }
+  .h100 svg { max-height: 100mm; } .h115 svg { max-height: 115mm; } .h130 svg { max-height: 130mm; } .h150 svg { max-height: 150mm; }
+  .figure { margin: 4px 0 8px; text-align: center; break-inside: avoid; }
+  .figure svg, .figure img { max-width: 100%; height: auto; }
+  .legende { font-size: 8pt; color: var(--secondaire); text-align: center; margin-top: 2px; }
+  .encadre { border-left: 3px solid var(--principale); background: var(--fond); padding: 5px 8px; margin: 6px 0; break-inside: avoid; }
+  .deux-colonnes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .petit { font-size: 8.3pt; color: var(--secondaire); }
+  ul.sources { font-size: 7.8pt; line-height: 1.3; margin: 2px 0; }
+  ul.sources li { margin: 0; }
+  .ok { color: #1e6b3a; font-weight: 600; }
+  .mermaid { margin: 0 auto; }
+  .schema { break-inside: avoid; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; align-items: start; }
+  .schema table { margin: 0; font-size: 7.8pt; }
+  .schema th { text-align: center; font-size: 8.5pt; }
+
+  /* Couverture */
+  .couverture { height: 262mm; display: flex; flex-direction: column; justify-content: space-between; }
+  .couverture .bandeau { background: var(--principale); color: #fff; padding: 22mm 14mm 16mm; border-radius: 6px; }
+  .couverture h1 { color: #fff; font-size: 34pt; margin: 0 0 6px; }
+  .couverture .sous-titre { font-size: 14pt; opacity: .95; margin: 0; }
+  .couverture .vague { width: 100%; height: 40px; margin-top: 14px; }
+  .couverture dl { display: grid; grid-template-columns: 52mm 1fr; gap: 4px 10px; font-size: 10.5pt; margin: 0 6mm; }
+  .couverture dt { color: var(--secondaire); }
+  .couverture dd { margin: 0; font-weight: 600; }
+  .couverture .pied { font-size: 8.5pt; color: var(--secondaire); margin: 0 6mm; }
+
+  /* Sommaire */
+  .sommaire ol { list-style: none; padding: 0; margin: 6px 0 12px; }
+  .sommaire li { display: flex; align-items: baseline; gap: 6px; font-size: 10.5pt; margin: 5px 0; }
+  .sommaire li .points { flex: 1; border-bottom: 1px dotted var(--secondaire); }
+  .sommaire li .num { min-width: 16px; text-align: right; font-weight: 600; }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js"></script>
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: "base",
+    themeVariables: {
+      fontFamily: "system-ui, -apple-system, sans-serif", fontSize: "16px",
+      primaryColor: "#e8f0f5", primaryBorderColor: "#0b4f6c", primaryTextColor: "#1b2631",
+      lineColor: "#4a5868", secondaryColor: "#fdf1e6", tertiaryColor: "#f7f9fb",
+    },
+    flowchart: { htmlLabels: true, curve: "basis" },
+    sequence: { mirrorActors: false, messageFontSize: 16, actorFontSize: 16, noteFontSize: 15, messageMargin: 26, boxMargin: 6, width: 130, actorMargin: 40 },
+    class: { useMaxWidth: false },
+    er: { fontSize: 15 },
+    gantt: { fontSize: 11, barHeight: 16, barGap: 3, leftPadding: 150 },
+  });
+</script>
+</head>
+<body>
+
+<!-- ============================ COUVERTURE ============================ -->
+<section class="couverture">
+  <div class="bandeau">
+    <p style="margin:0 0 10mm;font-size:10pt;letter-spacing:.08em;">HETIC — WEB3 · SUJET DE RATTRAPAGE</p>
+    <h1>ENSO Monitor</h1>
+    <p class="sous-titre">Conception et développement d'une plateforme d'analyse d'El Niño et de La Niña</p>
+    <svg class="vague" viewBox="0 0 400 40" preserveAspectRatio="none" aria-hidden="true"><path d="M2 20 C 50 4, 100 4, 150 20 S 250 36, 300 20 S 370 6, 398 14" fill="none" stroke="#f4a259" stroke-width="4"/></svg>
+    <p style="margin:6mm 0 0;font-size:16pt;font-weight:600;">Dossier de conception</p>
+  </div>
+  <dl>
+    <dt>Candidat</dt><dd>Raphael PAES RODRIGUES DA SILVA</dd>
+    <dt>Titre visé</dt><dd>RNCP 36146 — Concepteur développeur de solutions digitales (niveau 6)</dd>
+    <dt>Bloc présenté</dt><dd>BC03 — Développer une solution digitale</dd>
+    <dt>Données</dt><dd>Indice ONI v6 (ERSST.v6) — NOAA Climate Prediction Center</dd>
+    <dt>Stack</dt><dd>React · TypeScript · FastAPI · PostgreSQL · Pandas · Docker Compose · Caddy</dd>
+    <dt>Dépôt Git</dt><dd>github.com/Pharosi/projet-enso-monitor (version v1.0.0)</dd>
+    <dt>Date de remise</dt><dd>22 novembre 2026</dd>
+  </dl>
+  <p class="pied">Livrable B — document indépendant du code (livrable A : application et dépôt Git). L'IA générative a été utilisée comme assistant de développement, conformément au sujet (voir section 8).</p>
+</section>
+
+<!-- ============================ SOMMAIRE ============================ -->
+<section class="section sommaire nouvelle-page">
+  <h2>Sommaire</h2>
+  <ol>
+    <li>1. Besoin et contexte <span class="points"></span><span class="num" data-titre="1. Besoin et contexte"></span></li>
+    <li>2. Fonctionnel et UX <span class="points"></span><span class="num" data-titre="2. Fonctionnel et UX"></span></li>
+    <li>3. UML et modélisation <span class="points"></span><span class="num" data-titre="3. UML et modélisation"></span></li>
+    <li>4. Architecture technique <span class="points"></span><span class="num" data-titre="4. Architecture technique"></span></li>
+    <li>5. Organisation du projet <span class="points"></span><span class="num" data-titre="5. Organisation du projet"></span></li>
+    <li>6. Qualité et sécurité <span class="points"></span><span class="num" data-titre="6. Qualité et sécurité"></span></li>
+    <li>7. Déploiement proposé <span class="points"></span><span class="num" data-titre="7. Déploiement proposé"></span></li>
+    <li>8. Bilan et sources <span class="points"></span><span class="num" data-titre="8. Bilan et sources"></span></li>
+  </ol>
+
+  <h3>Résumé</h3>
+  <p>ENSO Monitor importe la série officielle de l'<strong>Oceanic Niño Index</strong> (ONI) publiée par la NOAA, la stocke dans PostgreSQL avec sa provenance, l'expose par une API FastAPI versionnée et la présente dans une application React accessible : courbe interactive filtrable par période, et comparaison de deux épisodes historiques accompagnée d'une interprétation prudente et de ses limites.</p>
+  <table>
+    <tr><th>Exigence du MVP</th><th>Réalisation vérifiable</th></tr>
+    <tr><td>Import NOAA dans PostgreSQL, source identifiée, doublons contrôlés</td><td>ETL <code>python -m enso.etl</code> : 921 saisons (DJF 1950 → ASO 2026) ; ré-import = 0 doublon ; chaque import tracé (URL, date, SHA-256, compteurs)</td></tr>
+    <tr><td>API FastAPI documentée, filtrage temporel, validation</td><td><code>GET /api/v1/observations?debut&amp;fin</code>, validation Pydantic (422), OpenAPI sur <code>/api/docs</code></td></tr>
+    <tr><td>Courbe interactive React/TS et filtre de période</td><td>courbe Recharts, filtre par listes mois/année, unité, version et source visibles, tableau équivalent</td></tr>
+    <tr><td>Comparaison de deux épisodes, interprétation prudente</td><td>1997-1998 / 2015-2016 : pics +2,37 / +2,59 °C ; 12 / 17 saisons ≥ +0,5 °C ; règles et 6 limites affichées</td></tr>
+    <tr><td>Trois tests minimaux</td><td>transformation (11 tests), API filtrée (7), changement de période côté frontend (6) — 77 tests au total, exécutés en intégration continue</td></tr>
+  </table>
+  <div class="figure"><img src="../images/courbe-oni.jpg" alt="Capture de l'application : courbe de l'ONI de 1950 à 2026" style="max-height:88mm"><div class="legende">Figure 1 — L'application : filtre de période (mois et année), résumé textuel, série ONI complète (1950-2026) et seuils El Niño / La Niña.</div></div>
+</section>
+
+<!-- ============================ 1. BESOIN ============================ -->
+<section class="section nouvelle-page">
+  <h2>1. Besoin et contexte</h2>
+  <h3>Contexte</h3>
+  <p>El Niño et La Niña sont les deux phases de l'oscillation australe (ENSO) : un réchauffement ou un refroidissement anormal de la surface du Pacifique équatorial, aux effets climatiques mondiaux. La NOAA les suit avec l'<strong>ONI</strong>, moyenne mobile sur trois mois des anomalies de température de surface de la mer dans la région Niño 3.4 (5°N-5°S, 120°-170°O). En novembre 2026, un épisode El Niño fort est en cours (+2,46 °C en ASO 2026) : le sujet est d'actualité, mais les chiffres circulent souvent sans source ni méthode.</p>
+  <h3>Objectif</h3>
+  <p>Transformer des observations scientifiques réelles en visualisations <strong>compréhensibles, sourcées et vérifiables</strong> : chaque valeur affichée doit pouvoir être reliée au fichier NOAA dont elle provient, avec la date d'extraction et la version de l'indice.</p>
+  <h3>Public cible</h3>
+  <table>
+    <tr><th>Profil</th><th>Besoin principal</th><th>Conséquence sur la conception</th></tr>
+    <tr><td>Étudiant, enseignant, journaliste scientifique</td><td>visualiser l'historique, comparer des épisodes célèbres</td><td>courbe lisible, épisodes proposés, interprétation en langage clair</td></tr>
+    <tr><td>Lecteur exigeant (vérification)</td><td>connaître la source, la version, les règles</td><td>source, version, date d'extraction et règles affichées avec chaque résultat</td></tr>
+    <tr><td>Utilisateur de lecteur d'écran ou du clavier</td><td>accéder aux mêmes informations sans graphique</td><td>résumé textuel, tableau de données, navigation clavier (RGAA / WCAG AA)</td></tr>
+    <tr><td>Exploitant (moi-même)</td><td>mettre à jour les données sans risque</td><td>ETL ré-exécutable, traçabilité des imports, sauvegardes</td></tr>
+  </table>
+  <h3>Contraintes</h3>
+  <ul>
+    <li><strong>Temps</strong> : sujet calibré pour cinq jours de travail, reçu le 26 octobre ; projet individuel mené en parallèle de deux emplois (à distance en journée, sur site le soir) et de ma vie de famille avec un jeune enfant : dépôt créé le 3/11, puis développement concentré du 17 au 22/11, dont une journée presque entièrement perdue au démarrage (section 5).</li>
+    <li><strong>Technique (imposée par le sujet)</strong> : React/TypeScript/Vite, FastAPI/Pydantic, PostgreSQL/SQLAlchemy/Alembic, ETL Python Pandas/NumPy, tests Pytest et Vitest, déploiement Docker Compose + Caddy documenté.</li>
+    <li><strong>Scientifique</strong> : une seule série authentique (ONI <em>ou</em> RONI), source et version documentées, classification explicite (seuils, durée, indice), aucune prévision.</li>
+    <li><strong>Budget</strong> : aucun ; le déploiement réel étant facultatif, la mise en production est documentée et démontrée en local, sans achat d'hébergement (section 7).</li>
+  </ul>
+  <h3>Périmètre du MVP et hors périmètre</h3>
+  <div class="deux-colonnes">
+    <div class="encadre"><strong>Dans le MVP</strong><ul><li>import ONI traçable et sans doublon</li><li>API de consultation filtrée et de comparaison</li><li>courbe, filtre, comparaison, interprétation, limites</li><li>accessibilité, responsive, états d'erreur</li><li>tests, intégration continue, déploiement documenté</li></ul></div>
+    <div class="encadre"><strong>Hors périmètre (choix assumés)</strong><ul><li>prévision climatique (exclue par le sujet)</li><li>administration et comptes utilisateurs</li><li>second indice (RONI) et données Copernicus ERA5 (bonus du sujet)</li><li>détection automatique de tous les épisodes</li><li>cartographie, exports</li></ul></div>
+  </div>
+  <div style="break-inside: avoid">
+  <h3>Choix de l'indice : ONI plutôt que RONI</h3>
+  <p>Le sujet autorise l'un ou l'autre. Les deux indices sont aussi fiables : ils reposent sur les mêmes mesures de la NOAA (ERSST v6), mais ne répondent pas à la même question.</p>
+  <table>
+    <tr><th></th><th>ONI</th><th>RONI</th></tr>
+    <tr><td><strong>Question</strong></td><td>De combien la région Niño 3.4 est-elle plus chaude que la normale ?</td><td>De combien la région Niño 3.4 est-elle plus chaude que le reste de l'océan tropical ?</td></tr>
+    <tr><td><strong>Adapté à</strong></td><td>l'analyse historique : le tableau officiel des épisodes de la NOAA depuis 1950 est construit avec lui, les chiffres sont donc vérifiables</td><td>la surveillance de l'épisode en cours, sans l'effet du réchauffement de fond ; indice officiel de la NOAA depuis 2026</td></tr>
+  </table>
+  </div>
+  <p>L'application étant un outil d'analyse historique, l'ONI a été retenu. Conséquence : une partie de l'écart entre des épisodes éloignés peut venir du réchauffement de fond ; cette limite est affichée avec chaque comparaison.</p>
+  <h3>Limites du sujet</h3>
+  <p>L'ONI mesure une seule région du Pacifique : il ne dit rien des <strong>impacts</strong> (pluies, sécheresses). Il ne retire pas la tendance au réchauffement global, que corrige le <strong>RONI</strong> (voir ci-dessus). L'application est un outil d'<strong>analyse historique</strong> ; ces limites sont affichées à l'utilisateur avec chaque comparaison. Enfin, « Super El Niño » n'étant pas une classe scientifique, l'application ne l'emploie pas.</p>
+</section>
+
+<!-- ============================ 2. FONCTIONNEL ============================ -->
+<section class="section nouvelle-page">
+  <h2>2. Fonctionnel et UX</h2>
+  <h3>User stories et priorisation (MoSCoW)</h3>
+  <table>
+    <tr><th>#</th><th>En tant que…, je veux…, afin de…</th><th>Priorité</th><th>Critères d'acceptation</th></tr>
+    <tr><td>US1</td><td>visiteur, je veux voir l'évolution de l'ONI, afin de repérer les épisodes</td><td>Must</td><td>courbe 1950-2026 ; unité, version et source visibles ; seuils ±0,5 °C</td></tr>
+    <tr><td>US2</td><td>visiteur, je veux limiter la courbe à une période, afin d'étudier un épisode</td><td>Must</td><td>début ≤ fin sinon message ; valeurs et résumé mis à jour (test n°3)</td></tr>
+    <tr><td>US3</td><td>visiteur, je veux comparer deux épisodes, afin de mesurer leurs différences</td><td>Must</td><td>pic, moyenne, durée au-delà du seuil, règle NOAA, interprétation et limites</td></tr>
+    <tr><td>US4</td><td>utilisateur de lecteur d'écran, je veux les données sans graphique</td><td>Must</td><td>résumé annoncé, tableau équivalent, navigation clavier, 0 violation axe-core</td></tr>
+    <tr><td>US5</td><td>exploitant, je veux importer la série NOAA sans doublon et tracée</td><td>Must</td><td>ré-import : 0 insertion ; table <code>imports</code> renseignée ; échec tracé</td></tr>
+    <tr><td>US6</td><td>visiteur, je veux comprendre une erreur</td><td>Should</td><td>message clair (API injoignable, période invalide, aucune donnée)</td></tr>
+    <tr><td>US7</td><td>visiteur mobile, je veux utiliser l'application sur téléphone</td><td>Should</td><td>aucun défilement horizontal à 375 px, cibles tactiles ≥ 44 px</td></tr>
+    <tr><td>US8</td><td>visiteur, je veux voir la situation actuelle en un coup d'œil</td><td>Could</td><td>reportée (extension si le temps le permet)</td></tr>
+    <tr><td>US9</td><td>visiteur, je veux une prévision de l'ONI</td><td>Won't</td><td>exclue par le sujet</td></tr>
+  </table>
+  <h3>Parcours utilisateurs</h3>
+  <div class="deux-colonnes">
+    <div class="encadre"><strong>Explorer</strong> — arrivée sur la page → série complète, résumé et courbe → choix d'un mois de début et de fin → « Afficher » → résumé annoncé, courbe et tableau mis à jour. Début après la fin : message immédiat, aucun appel à l'API.</div>
+    <div class="encadre"><strong>Comparer</strong> — section comparaison (1997-98 / 2015-16 affichée par défaut) → choix des épisodes A et B → « Comparer » → courbes superposées, indicateurs, interprétation, règles et limites. Même épisode deux fois : message.</div>
+  </div>
+  <p class="petit">Parcours de l'exploitant : import mensuel planifié, contrôle de la table <code>imports</code>, sauvegardes (section 7).</p>
+  <h3>Wireframes et maquette</h3>
+  <div class="figure">
+    <svg viewBox="0 0 640 262" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, sans-serif" font-size="9" fill="#1b2631">
+      <rect x="1" y="1" width="420" height="246" rx="6" fill="#fff" stroke="#4a5868"/>
+      <text x="10" y="16" font-weight="700" font-size="11" fill="#0b4f6c">ENSO Monitor</text><text x="10" y="28" fill="#4a5868">Navigation : Évolution · Comparaison</text>
+      <rect x="10" y="36" width="400" height="104" rx="4" fill="#f7f9fb" stroke="#c9d3dd"/>
+      <text x="18" y="50" font-weight="700">Évolution de l'indice ONI</text>
+      <text x="18" y="63" fill="#4a5868" font-size="8">Début</text>
+      <rect x="44" y="55" width="40" height="12" fill="#fff" stroke="#c9d3dd"/><text x="47" y="64" font-size="8">Mois ▾</text>
+      <rect x="88" y="55" width="40" height="12" fill="#fff" stroke="#c9d3dd"/><text x="91" y="64" font-size="8">Année ▾</text>
+      <text x="138" y="63" fill="#4a5868" font-size="8">Fin</text>
+      <rect x="156" y="55" width="40" height="12" fill="#fff" stroke="#c9d3dd"/><text x="159" y="64" font-size="8">Mois ▾</text>
+      <rect x="200" y="55" width="40" height="12" fill="#fff" stroke="#c9d3dd"/><text x="203" y="64" font-size="8">Année ▾</text>
+      <rect x="248" y="55" width="40" height="12" fill="#0b4f6c"/><text x="253" y="64" fill="#fff" font-size="8">Afficher</text>
+      <rect x="292" y="55" width="64" height="12" fill="#fff" stroke="#0b4f6c"/><text x="296" y="64" fill="#0b4f6c" font-size="8">Toute la série</text>
+      <text x="18" y="82" fill="#4a5868">Résumé : n saisons, maximum, minimum (lu par lecteur d'écran)</text>
+      <rect x="18" y="86" width="384" height="34" fill="#fff" stroke="#c9d3dd"/><path d="M22 110 C60 90, 90 118, 130 98 S 200 92, 240 108 S 330 86, 398 96" fill="none" stroke="#0b4f6c" stroke-width="1.5"/><line x1="22" y1="100" x2="398" y2="100" stroke="#b03a2e" stroke-dasharray="4 3"/>
+      <text x="18" y="132" fill="#4a5868">▸ Tableau des données (replié) · Source NOAA, version, date d'extraction</text>
+      <rect x="10" y="146" width="400" height="94" rx="4" fill="#f7f9fb" stroke="#c9d3dd"/>
+      <text x="18" y="160" font-weight="700">Comparer deux épisodes</text>
+      <rect x="18" y="166" width="80" height="14" fill="#fff" stroke="#c9d3dd"/><text x="22" y="176">Épisode A ▾</text>
+      <rect x="104" y="166" width="80" height="14" fill="#fff" stroke="#c9d3dd"/><text x="108" y="176">Épisode B ▾</text>
+      <rect x="190" y="166" width="52" height="14" fill="#0b4f6c"/><text x="194" y="176" fill="#fff">Comparer</text>
+      <rect x="18" y="186" width="190" height="48" fill="#fff" stroke="#c9d3dd"/><text x="24" y="200" fill="#4a5868">Courbes A / B superposées</text>
+      <rect x="214" y="186" width="188" height="48" fill="#fff" stroke="#c9d3dd"/><text x="220" y="200" fill="#4a5868">Indicateurs A | B</text><text x="220" y="214" fill="#4a5868">Interprétation · Règles</text><text x="220" y="228" fill="#4a5868">Limites</text>
+      <text x="211" y="259" text-anchor="middle" fill="#4a5868" font-size="8">Bureau (≥ 720 px)</text>
+      <rect x="450" y="1" width="150" height="246" rx="10" fill="#fff" stroke="#4a5868"/>
+      <text x="460" y="18" font-weight="700" fill="#0b4f6c">ENSO Monitor</text>
+      <text x="460" y="36" fill="#4a5868" font-size="8">Début</text>
+      <rect x="486" y="27" width="50" height="12" fill="#fff" stroke="#c9d3dd"/><text x="489" y="36" font-size="8">Mois ▾</text>
+      <rect x="540" y="27" width="50" height="12" fill="#fff" stroke="#c9d3dd"/><text x="543" y="36" font-size="8">Année ▾</text>
+      <text x="460" y="54" fill="#4a5868" font-size="8">Fin</text>
+      <rect x="486" y="45" width="50" height="12" fill="#fff" stroke="#c9d3dd"/><text x="489" y="54" font-size="8">Mois ▾</text>
+      <rect x="540" y="45" width="50" height="12" fill="#fff" stroke="#c9d3dd"/><text x="543" y="54" font-size="8">Année ▾</text>
+      <rect x="460" y="62" width="60" height="14" fill="#0b4f6c"/><text x="466" y="72" fill="#fff">Afficher</text>
+      <rect x="460" y="82" width="130" height="50" fill="#fff" stroke="#c9d3dd"/><path d="M464 120 C480 100, 500 126, 520 106 S 560 98, 586 110" fill="none" stroke="#0b4f6c" stroke-width="1.5"/>
+      <text x="460" y="146" fill="#4a5868">▸ Tableau (défile)</text>
+      <rect x="460" y="154" width="130" height="14" fill="#fff" stroke="#c9d3dd"/><text x="464" y="164">Épisode A ▾</text>
+      <rect x="460" y="172" width="130" height="14" fill="#fff" stroke="#c9d3dd"/><text x="464" y="182">Épisode B ▾</text>
+      <rect x="460" y="190" width="130" height="40" fill="#fff" stroke="#c9d3dd"/><text x="466" y="206" fill="#4a5868">Courbes, indicateurs,</text><text x="466" y="220" fill="#4a5868">interprétation (empilés)</text>
+      <text x="525" y="259" text-anchor="middle" fill="#4a5868" font-size="8">Mobile (375 px)</text>
+    </svg>
+    <div class="legende">Figure 2 — Wireframes basse fidélité : une page, deux sections ; sur mobile, les éléments s'empilent. L'écran réalisé est présenté en figure 1.</div>
+  </div>
+  <p class="petit">Choix UX : une seule page (deux tâches, pas de navigation complexe) ; la requête ne part qu'à la validation du formulaire ; la comparaison la plus parlante (1997-98 / 2015-16) est affichée dès l'ouverture ; couleurs de phase conventionnelles (rouge = chaud, bleu = froid) doublées par le style de trait.</p>
+</section>
+
+<!-- ============================ 3. UML ============================ -->
+<section class="section nouvelle-page">
+  <h2>3. UML et modélisation</h2>
+  <h3>3.1 Diagramme de cas d'utilisation</h3>
+  <div class="figure h130"><pre class="mermaid">
+flowchart LR
+  V(["Visiteur"])
+  E(["Exploitant"])
+  C(["Planificateur (cron)"])
+  N[("NOAA CPC<br/>oni.ascii.txt")]
+  subgraph S["Système ENSO Monitor"]
+    direction TB
+    U1(["Consulter la courbe ONI"])
+    U2(["Filtrer par période"])
+    U3(["Consulter le tableau et la source"])
+    U4(["Comparer deux épisodes"])
+    U5(["Lire l'interprétation, les règles et les limites"])
+    U6(["Importer la série ONI"])
+    U7(["Consulter l'historique des imports"])
+    U8(["Sauvegarder / restaurer la base"])
+  end
+  V --> U1 & U2 & U3 & U4
+  U4 -. « include » .-> U5
+  U2 -. « extend » .-> U1
+  E --> U6 & U7 & U8
+  C --> U6
+  U6 --> N
+  </pre><div class="legende">Figure 3 — Cas d'utilisation. Le visiteur n'a besoin d'aucun compte : il n'y a ni donnée personnelle ni écriture côté utilisateur, donc pas d'administrateur applicatif.</div></div>
+  <p>Deux acteurs humains aux droits très différents : le <strong>visiteur</strong> lit uniquement (routes <code>GET</code>) ; l'<strong>exploitant</strong> agit sur le serveur (ETL, sauvegardes) et n'a pas d'interface web, ce qui supprime toute surface d'attaque d'administration. Le <strong>planificateur</strong> déclenche l'import mensuel ; la <strong>NOAA</strong> est un système externe.</p>
+
+  <h3>3.2 Modèle de domaine et diagramme de classes</h3>
+  <div class="figure h85"><pre class="mermaid">
+classDiagram
+  direction LR
+  class Source {
+    +id
+    +nom «unique»
+    +url
+  }
+  class Indice {
+    +id
+    +code «unique» : ONI
+    +unite : °C
+    +version : ONI v6
+  }
+  class Import {
+    +id
+    +url_fichier
+    +date_extraction
+    +empreinte_sha256
+    +statut
+    +compteurs : lues, insérées…
+    +message_erreur
+  }
+  class Observation {
+    +id
+    +saison : DJF…NDJ
+    +annee
+    +date_periode
+    +temperature_totale
+    +anomalie
+  }
+  Source --> Indice : publie [1 → 1..*]
+  Indice --> Import : importé par [1 → 0..*]
+  Import --> Observation : a écrit [1 → 0..*]
+  Indice --> Observation : mesure [1 → 0..*]
+</pre><div class="legende">Figure 4 — Les quatre entités du sujet (types détaillés en 4.3). Le domaine calcule en plus, sans les stocker, l'analyse d'une période (pic, durées, intensité) et l'interprétation.</div></div>
+  <table class="bloc">
+    <tr><th>Relation</th><th>Cardinalité</th><th>Justification</th></tr>
+    <tr><td>Source → Indice</td><td>1 — 1..*</td><td>la NOAA publie plusieurs indices (ONI, RONI) ; ajouter le RONI ne demanderait aucune modification du schéma</td></tr>
+    <tr><td>Indice → Import</td><td>1 — 0..*</td><td>l'ETL s'exécute chaque mois : une ligne par exécution conserve l'historique ; 0 avant le premier import</td></tr>
+    <tr><td>Indice → Observation</td><td>1 — 0..*</td><td>une valeur par saison ; <strong>unicité (indice, date_periode)</strong> = contrôle des doublons</td></tr>
+    <tr><td>Import → Observation</td><td>1 — 0..*</td><td>provenance : chaque observation pointe vers l'import qui l'a écrite (mis à jour si la NOAA révise la valeur) ; un import en échec n'écrit rien</td></tr>
+  </table>
+
+  <h3>3.3 Diagramme de séquence — consultation du graphique</h3>
+  <div class="figure h115"><pre class="mermaid">
+sequenceDiagram
+  autonumber
+  actor U as Visiteur
+  participant R as React
+  participant A as FastAPI
+  participant C as Application
+  participant B as PostgreSQL
+  U->>R: période, « Afficher »
+  Note over R: début > fin → message
+  R->>A: GET /observations?debut&fin
+  A->>A: validation Pydantic
+  alt entrée invalide
+    A-->>R: 422 (champ, message)
+  else valide
+    A->>C: consulter_serie()
+    C->>B: SELECT paramétré
+    B-->>C: lignes (index)
+    alt aucun import
+      C-->>A: IndiceIntrouvable
+      A-->>R: 404
+    else données
+      C-->>A: série (domaine)
+      A-->>R: 200 JSON
+    end
+  end
+  R-->>U: résumé, courbe, tableau
+</pre><div class="legende">Figure 5 — Consultation du graphique, du navigateur à PostgreSQL, avec les cas d'erreur (422, 404). Non représentés : erreur inattendue → 500 générique ; une réponse arrivée après une nouvelle demande est ignorée par React (réponse obsolète).</div></div>
+</section>
+
+<!-- ============================ 4. ARCHITECTURE ============================ -->
+<section class="section nouvelle-page">
+  <h2>4. Architecture technique</h2>
+  <h3>4.1 Architecture logique</h3>
+  <div class="figure h70"><pre class="mermaid">
+flowchart LR
+  F["React + TS<br/>(navigateur)"] -- "HTTPS /api/v1" --> K["Caddy"] --> API
+  subgraph BE["Backend Python — enso"]
+    direction TB
+    API["api<br/>FastAPI, Pydantic"] --> APP["application"] --> DOM["domaine<br/>règles pures"]
+    APP --> INF["infrastructure<br/>SQLAlchemy"]
+    ETL["etl (worker)"] --> DOM
+    ETL --> INF
+  end
+  INF -- "SQL paramétré" --> PG[("PostgreSQL")]
+  ETL -- "mensuel" --> N[("NOAA")]
+</pre><div class="legende">Figure 6 — Composants et flux. Les dépendances pointent vers le domaine, qui ne connaît ni FastAPI ni PostgreSQL.</div></div>
+  <table class="bloc">
+    <tr><th>Composant</th><th>Responsabilité</th><th>Ne fait pas</th></tr>
+    <tr><td>Frontend</td><td>saisie, affichage, accessibilité ; <code>services/api.ts</code> seul point d'accès réseau</td><td>aucun calcul métier</td></tr>
+    <tr><td>api</td><td>HTTP : validation, codes, format d'erreur unique, conversion en JSON</td><td>SQL, règles climatiques</td></tr>
+    <tr><td>application</td><td>orchestration d'un cas d'utilisation</td><td>HTTP</td></tr>
+    <tr><td>domaine</td><td>règles pures et testables : saisons, plausibilité, règle NOAA, intensité, interprétation</td><td>entrées/sorties</td></tr>
+    <tr><td>infrastructure</td><td>persistance (modèles, dépôts), conversion vers le domaine</td><td>règles, HTTP</td></tr>
+    <tr><td>etl</td><td>import planifiable, idempotent et tracé</td><td>servir des requêtes</td></tr>
+  </table>
+  <p><strong>Flux de données de l'import</strong> : téléchargement du fichier texte (httpx, délai 30 s, code HTTP contrôlé) → empreinte SHA-256 → lecture Pandas, conversion (<code>errors="coerce"</code>), rejet des lignes invalides (masque NumPy), suppression des doublons → comparaison avec la base → insertions et mises à jour dans <strong>une seule transaction</strong> → bilan dans <code>imports</code>. En cas d'erreur : annulation complète, import marqué <code>echoue</code> avec le message.</p>
+
+  <h3>4.2 Décisions d'architecture</h3>
+  <table>
+    <tr><th>Besoin</th><th>Solutions envisagées</th><th>Choix et avantages</th><th>Limites</th><th>Vérification</th></tr>
+    <tr><td>Stocker des séries avec intégrité et provenance</td><td>SQLite, MongoDB, PostgreSQL</td><td><strong>PostgreSQL</strong> : contraintes UNIQUE/CHECK/FK qui protègent même si le code a un bug, <code>NUMERIC</code> exact, accès concurrent API + ETL</td><td>un serveur à administrer</td><td>5 insertions invalides refusées par la base ; <code>alembic check</code> en CI</td></tr>
+    <tr><td>Importer sans ralentir les utilisateurs</td><td>route d'import dans l'API, worker séparé</td><td><strong>ETL séparé</strong> (E/T/L) : planifiable, code de sortie, la NOAA lente n'affecte pas l'API</td><td>un processus de plus</td><td>ré-import : 0 doublon ; révision : 1 mise à jour ; échec tracé</td></tr>
+    <tr><td>Faire évoluer l'API sans casser le frontend</td><td>routes non versionnées, en-tête de version</td><td><strong>préfixe /api/v1</strong> : une v2 pourra coexister</td><td>préfixe à maintenir</td><td>OpenAPI généré</td></tr>
+    <tr><td>Séparer les responsabilités et tester les règles</td><td>MVC, architecture hexagonale complète</td><td><strong>4 couches « légères »</strong> : règles pures testées sans base</td><td>pas d'interfaces abstraites (choix de simplicité)</td><td>tests du domaine sans PostgreSQL</td></tr>
+    <tr><td>Déployer de façon reproductible</td><td>installation manuelle, Kubernetes, PaaS</td><td><strong>Docker Compose</strong> : un fichier versionné, identique en local et en production</td><td>un seul serveur</td><td>démonstration locale complète (section 7)</td></tr>
+    <tr><td>Rendre le graphique accessible</td><td>graphique seul, image avec alt</td><td><strong>résumé textuel + tableau + nom + clavier</strong>, cohérent avec les couleurs et les traits</td><td>Recharts insuffisant seul</td><td>axe-core 0 violation ; test du nom ; contrastes mesurés</td></tr>
+    <tr><td>Tracer les données</td><td>colonne « source » texte, journal fichier</td><td><strong>table imports</strong> + référence de l'import sur chaque observation</td><td>une jointure de plus</td><td>test : URL, empreinte et statut enregistrés</td></tr>
+  </table>
+
+  <h3>4.3 Schéma relationnel</h3>
+  <div class="schema">
+    <table class="bloc"><tr><th colspan="2">sources</th></tr>
+      <tr><td><strong>id</strong> PK</td><td>serial</td></tr><tr><td>nom</td><td>varchar(150) <em>UNIQUE</em></td></tr>
+      <tr><td>url</td><td>text</td></tr><tr><td>description</td><td>text NULL</td></tr></table>
+    <table class="bloc"><tr><th colspan="2">indices</th></tr>
+      <tr><td><strong>id</strong> PK</td><td>serial</td></tr><tr><td>code</td><td>varchar(20) <em>UNIQUE</em></td></tr>
+      <tr><td>nom, unite, version</td><td>varchar</td></tr><tr><td>source_id</td><td>FK → sources, <em>RESTRICT</em></td></tr></table>
+    <table class="bloc"><tr><th colspan="2">imports</th></tr>
+      <tr><td><strong>id</strong> PK</td><td>serial</td></tr><tr><td>indice_id</td><td>FK → indices, <em>indexé</em></td></tr>
+      <tr><td>url_fichier</td><td>text</td></tr><tr><td>date_extraction</td><td>timestamptz, défaut now()</td></tr>
+      <tr><td>termine_le</td><td>timestamptz NULL</td></tr><tr><td>empreinte_sha256</td><td>varchar(64)</td></tr>
+      <tr><td>statut</td><td><em>CHECK</em> en_cours / reussi / echoue</td></tr>
+      <tr><td>lignes_lues, _inserees, _mises_a_jour, _ignorees</td><td>int, <em>CHECK</em> ≥ 0</td></tr>
+      <tr><td>message_erreur</td><td>text NULL</td></tr></table>
+    <table class="bloc"><tr><th colspan="2">observations</th></tr>
+      <tr><td><strong>id</strong> PK</td><td>serial</td></tr><tr><td>indice_id</td><td>FK → indices</td></tr>
+      <tr><td>import_id</td><td>FK → imports, <em>indexé</em></td></tr><tr><td>saison</td><td>varchar(3), <em>CHECK</em> 12 saisons</td></tr>
+      <tr><td>annee</td><td>smallint, <em>CHECK</em> 1950-2100</td></tr><tr><td>date_periode</td><td>date (1er jour du mois central)</td></tr>
+      <tr><td>temperature_totale</td><td>numeric(5,2)</td></tr><tr><td>anomalie</td><td>numeric(4,2), <em>CHECK</em> −5 à +5</td></tr>
+      <tr><td colspan="2"><em>UNIQUE (indice_id, date_periode)</em> : anti-doublon + index du filtrage temporel</td></tr></table>
+  </div>
+  <p class="legende">Figure 7 — Schéma PostgreSQL (migration Alembic <code>0001</code>, réversible). Toutes les colonnes sont NOT NULL sauf mention ; clés étrangères en ON DELETE RESTRICT.</p></div>
+  <p><strong>Intégrité et migrations</strong> : contraintes nommées par convention (messages lisibles, migrations prévisibles) ; <code>ON DELETE RESTRICT</code> interdit de supprimer une source ou un import encore référencé (traçabilité) ; les bornes de plausibilité sont des constantes du domaine réutilisées par les <code>CHECK</code> et par l'ETL (référence unique). La migration a été testée dans les deux sens et la CI vérifie qu'elle correspond aux modèles.</p>
+</section>
+
+<!-- ============================ 5. ORGANISATION ============================ -->
+<section class="section nouvelle-page">
+  <h2>5. Organisation du projet</h2>
+  <h3>Outils et méthode</h3>
+  <p><strong>Méthode</strong> : travaillant seul, je n'ai pas appliqué Scrum (pas d'équipe ni de cérémonies) mais un <strong>Kanban personnel</strong> inspiré de l'agilité : une issue = une tâche courte avec critères d'acceptation, une colonne par état (à faire, en cours, terminé), des jalons quotidiens servant de mini-itérations et une version livrable à chaque étape. <strong>GitHub</strong> : plus de 20 issues avec critères d'acceptation, jalons quotidiens (J1-J6), tableau Kanban (GitHub Projects, automatisé), plus de 20 pull requests relues avant fusion, intégration continue (Actions). <strong>Git</strong> : <code>main</code> (versions), <code>develop</code> (intégration), une branche courte par issue (<code>feature/</code>, <code>fix/</code>, <code>test/</code>, <code>docs/</code>, <code>chore/</code>, <code>ci/</code>), Conventional Commits, fusion par commit de fusion pour conserver la progression. <strong>Versions</strong> : v0.1.0 (données/ETL), v0.2.0 (API), v0.3.0 (frontend), v1.0.0 (livraison). Saisie du backlog et gestion des PR par script GitHub CLI ; assistance de l'IA détaillée en section 8.</p>
+  <h3>Backlog personnel (priorisé)</h3>
+  <table>
+    <tr><th>Jalon</th><th>Issues (priorité haute sauf mention)</th><th>État</th></tr>
+    <tr><td>J1 Mise en place</td><td>#1 dépôt et conventions · #2 monorepo, PostgreSQL Docker, route santé</td><td class="ok">terminé</td></tr>
+    <tr><td>J2 Données et ETL</td><td>#3 modèle + migration · #4 ETL ONI · #5 traçabilité · #6 test n°1</td><td class="ok">terminé</td></tr>
+    <tr><td>J3 API</td><td>#7 observations filtrées · #8 comparaison · #9 erreurs/OpenAPI/CORS (moyenne) · #10 test n°2</td><td class="ok">terminé</td></tr>
+    <tr><td>J4 Frontend</td><td>#11 initialisation · #12 courbe + filtre · #13 comparaison · #14 accessibilité · #15 test n°3</td><td class="ok">terminé</td></tr>
+    <tr><td>J5 Qualité, déploiement, dossier</td><td>#16 lint + CI (moyenne) · #17 déploiement · #18 README · #19 dossier · #36 anomalie (bug)</td><td class="ok">terminé</td></tr>
+    <tr><td>J6 Remise</td><td>#20 version v1.0.0, accès au dépôt, ZIP</td><td>22/11</td></tr>
+  </table>
+  <h3>Planning sur cinq jours : prévu et réalisé</h3>
+  <p>Le sujet a été reçu le 26 octobre. Mes deux emplois (journée et soir) et ma vie de famille ne me laissant que peu de disponibilités, j'ai préparé le dépôt puis concentré le développement sur cinq jours.</p>
+  <table>
+    <tr><th>Jour</th><th>Prévu</th><th>Réalisé</th></tr>
+    <tr><td>26/10 → 16/11</td><td>préparation</td><td>réception du sujet (26/10), analyse, création du dépôt (3/11) ; disponibilités limitées par mes deux emplois</td></tr>
+    <tr><td>Mar. 17/11</td><td>J1 — mise en place</td><td>backlog (20 issues), jalons, tableau, conventions, première PR</td></tr>
+    <tr><td>Mer. 18/11</td><td>J2 — données et ETL</td><td>journée <strong>perdue</strong> (contraintes professionnelles et familiales) ; seulement une relecture du projet en fin de soirée : risque réalisé</td></tr>
+    <tr><td>Jeu. 19/11</td><td>J3 — API</td><td>J1 + J2 + J3 : structure, PostgreSQL, modèle, ETL, API, tests n°1 et n°2 — versions <strong>v0.1.0</strong> et <strong>v0.2.0</strong></td></tr>
+    <tr><td>Ven. 20/11</td><td>J4 — frontend</td><td>J4 (test n°3, accessibilité), anomalie #36, <strong>v0.3.0</strong>, CI, déploiement, README, début du dossier</td></tr>
+    <tr><td>Sam. 21/11</td><td>J5 — qualité, déploiement, dossier</td><td>dossier de conception, relecture, préparation de la soutenance</td></tr>
+    <tr><td>Dim. 22/11</td><td>J6 — remise</td><td><strong>v1.0.0</strong>, branche par défaut <code>main</code>, accès au dépôt, ZIP, dépôt sur le Drive</td></tr>
+  </table>
+</div>
+  <h3>Risques, arbitrages et suivi</h3>
+  <table>
+    <tr><th>Risque</th><th>Probabilité / impact</th><th>Prévention</th><th>Ce qui s'est passé</th></tr>
+    <tr><td>Retard sur le planning</td><td>forte / fort</td><td>MVP d'abord ; liste de coupes définie à l'avance (CI → Playwright → démo de production)</td><td><strong>réalisé</strong> : une journée presque perdue → J2 et J3 regroupés le 19/11 ; aucune coupe nécessaire</td></tr>
+    <tr><td>Code produit avec l'IA mal compris</td><td>moyenne / critique (soutenance)</td><td>règles de simplicité, relecture de chaque PR, fiches d'étude, exercices de modification</td><td>maîtrisé : code relu et étudié partie par partie</td></tr>
+    <tr><td>Erreur sur les données (indice, version)</td><td>moyenne / fort</td><td>vérification à la source, traçabilité</td><td>version v5 supposée → <strong>v6 vérifiée</strong> ; RONI officiel découvert et documenté</td></tr>
+    <tr><td>NOAA indisponible</td><td>faible / moyen</td><td>tests sur extrait local, échec tracé, données conservées</td><td>non survenu ; scénario testé (URL invalide)</td></tr>
+    <tr><td>Perte de données</td><td>faible / moyen</td><td>sauvegardes + restauration testée</td><td>démonstration : 921 → 321 → 921</td></tr>
+  </table>
+  <p><strong>Arbitrages</strong> : comparaison par périodes avec épisodes proposés plutôt que détection automatique (extension) ; test frontend n°3 avec Vitest + Testing Library plutôt que Playwright (même exigence couverte, plus rapide) ; Caddy sert directement le frontend (un service de moins) ; pas d'authentification (aucune donnée personnelle, aucune écriture) ; extensions « situation actuelle » et « bandes de phases » reportées après la livraison du MVP. <strong>Suivi</strong> : tableau Kanban mis à jour à chaque PR, jalons à dates révisées, une version publiée à chaque étape majeure.</p>
+</section>
+
+<!-- ============================ 6. QUALITÉ ============================ -->
+<section class="section">
+  <h2>6. Qualité et sécurité</h2>
+  <h3>Stratégie de tests</h3>
+  <table>
+    <tr><th>Niveau</th><th>Outil</th><th>Ce qui est vérifié</th><th>Nb</th></tr>
+    <tr><td>Domaine (unitaire, sans base)</td><td>Pytest</td><td><strong>test n°1</strong> transformation (doublons, saison/année/anomalie invalides, extrait réel 1997-98) ; classement nouvelles/révisées/inchangées ; seuils, séquences, El Niño 1997 / La Niña 1998, interprétation</td><td>24</td></tr>
+    <tr><td>Intégration (PostgreSQL de test)</td><td>Pytest</td><td>ETL complet : traçabilité, ré-import sans doublon, révision, échec sans données partielles</td><td>4</td></tr>
+    <tr><td>API</td><td>Pytest + TestClient</td><td><strong>test n°2</strong> période filtrée (12 valeurs attendues), 4 entrées invalides → 422, 404 ; format d'erreur, 500 sans fuite, CORS ; comparaison</td><td>19</td></tr>
+    <tr><td>Frontend</td><td>Vitest + Testing Library</td><td><strong>test n°3</strong> changement de période → nouvelles valeurs ; aucune saisie libre ; erreurs ; comparaison ; service API</td><td>13</td></tr>
+    <tr><td>Accessibilité</td><td>axe-core, calcul WCAG</td><td>0 violation ; nom des graphiques ; contraste de toutes les couleurs</td><td>17</td></tr>
+  </table>
+  <p>Principes : base PostgreSQL réelle et dédiée aux tests (comportement des contraintes fidèle) ; téléchargement injecté (tests sans Internet) ; API simulée côté frontend ; tout le jeu (77 tests), le lint, les migrations et le build s'exécutent en <strong>intégration continue</strong> à chaque pull request. Chaque test sensible a été vérifié <strong>en échec</strong> avant d'être considéré comme probant (section 8).</p>
+  <h3>Vérifications UX et accessibilité</h3>
+  <p>Navigation complète au clavier (ordre logique, lien d'évitement, focus visible), lecteur d'écran (résumé <code>aria-live</code> relié à la figure, tableau équivalent, <code>role="alert"</code> pour les erreurs), contrastes mesurés (texte ≥ 6,9:1), courbes distinguées par la couleur et le trait, affichage à 375 px sans défilement horizontal, textes et nombres au format français.</p>
+  <h3>Sécurité</h3>
+  <table>
+    <tr><th>Menace</th><th>Mesure</th></tr>
+    <tr><td>Injection SQL</td><td>requêtes paramétrées générées par SQLAlchemy ; aucune concaténation d'entrée utilisateur</td></tr>
+    <tr><td>Entrées malveillantes ou incohérentes</td><td>validation Pydantic (types, ordre des dates, paramètres inconnus refusés) avant tout traitement</td></tr>
+    <tr><td>Fuite d'informations</td><td>erreur 500 générique, détail uniquement dans les journaux (testé) ; en-tête <code>Server</code> retiré</td></tr>
+    <tr><td>Secrets dans le code</td><td><code>.env</code> hors Git (modèles versionnés sans valeur), mot de passe généré aléatoirement</td></tr>
+    <tr><td>Appels depuis un autre site</td><td>CORS limité au frontend déclaré et à <code>GET</code> (testé)</td></tr>
+    <tr><td>XSS, clickjacking, rétrogradation HTTP</td><td>React échappe le contenu ; CSP, HSTS, <code>nosniff</code>, <code>frame-ancestors 'none'</code> via Caddy</td></tr>
+    <tr><td>Compromission d'un service</td><td>base et API sur un réseau interne sans Internet, aucun port publié sauf Caddy, processus non-root</td></tr>
+    <tr><td>Contrôle d'accès</td><td>non requis : aucune administration ni donnée personnelle, aucune route d'écriture exposée</td></tr>
+  </table>
+  <h3>Performance</h3>
+  <p>Mesures locales : série complète (921 valeurs) 94 Ko, <strong>9 Ko compressés</strong> (Caddy compresse) ; une année 1,6 Ko en 6 ms ; comparaison 6 Ko en 7 ms. Le filtrage utilise l'index de la contrainte unique. Point faible identifié : JavaScript de 649 Ko (188 Ko compressés), dû au module graphique — piste : chargement différé. Les données changeant une fois par mois, un cache HTTP serait une optimisation simple.</p>
+  <h3>Traitement des anomalies</h3>
+  <div class="encadre">
+    <strong>Anomalie #36 — contraste du contour de focus.</strong> Constat lors de l'audit d'accessibilité : en <em>mesurant</em> les couleurs (formule WCAG), le contour de focus atteignait <strong>2,07:1</strong> sur fond blanc pour 3:1 exigés (critère 1.4.11).
+    Démarche : issue de type bug → branche <code>fix/36-contraste-focus</code> → <strong>test qui reproduit</strong> l'anomalie (calcul du contraste depuis <code>index.css</code> : 2 échecs, commit séparé) → correction <code>#b45309</code> (<strong>5,02:1</strong>) → test vert, suite complète verte, contrôle visuel au clavier → PR #37. Le test couvre toutes les couleurs : toute régression future sera détectée.
+  </div>
+  <div class="encadre"><strong>Anomalie #44</strong> (constatée lors d'un test manuel dans Safari) : le champ <code>&lt;input type="month"&gt;</code> n'existe pas dans Safari, qui affichait un champ texte libre ; une saisie naturelle (01/01/1997) provoquait une erreur 422. Même démarche : tests qui échouent, remplacement par des listes mois/année identiques dans tous les navigateurs, tests verts (PR #45). Leçon : vérifier aussi dans un second moteur de navigateur.</div>
+  <p class="petit">Autres anomalies corrigées pendant le développement : résumé lu deux fois par les lecteurs d'écran, graphiques focalisables sans nom accessible, libellés superposés, documentation de l'API inaccessible derrière le proxy, numéro de version incohérent avant une publication.</p>
+</section>
+
+<!-- ============================ 7. DÉPLOIEMENT ============================ -->
+<section class="section">
+  <h2>7. Déploiement proposé</h2>
+  <p>La procédure complète figure dans le dépôt (<code>deploy/README.md</code>). Elle a été <strong>exécutée en local</strong> (<code>DOMAINE=localhost</code>) : aucune dépense n'a été engagée.</p>
+  <div class="figure h85"><pre class="mermaid">
+flowchart LR
+  I((Internet)) -- "HTTPS 443<br/>(80 → 308)" --> CA["caddy<br/>HTTPS, en-têtes,<br/>frontend"]
+  subgraph INT["réseau interne"]
+    direction TB
+    API["api<br/>non-root, santé"] --> DB[("db PostgreSQL<br/>aucun port publié")]
+    MIG["migration (1×)"] --> DB
+  end
+  CA -- "/api/*" --> API
+  ETL["etl (cron mensuel)"] --> DB
+  ETL --> N[("NOAA")]
+  DB -. "pg_dump nocturne" .-> S[("sauvegardes<br/>+ copie hors serveur")]
+</pre><div class="legende">Figure 8 — Architecture cible : seul Caddy est exposé ; l'API, la base et les migrations sont sur un réseau interne sans accès Internet ; volumes persistants pour la base et les certificats.</div></div>
+  <div class="deux-colonnes">
+    <div>
+      <h3>Hébergement et dimensionnement</h3>
+      <p>VPS Linux (exemple : Hetzner CX22, UE) : <strong>2 vCPU, 4 Go, 40 Go SSD</strong>, Ubuntu 24.04 LTS. PostgreSQL ≈ 300 Mo, API ≈ 150 Mo, Caddy ≈ 30 Mo, construction des images ≈ 1 Go ponctuellement ; données ONI &lt; 1 Mo. Largement suffisant pour plusieurs centaines de requêtes par seconde sur ce volume.</p>
+      <h3>Configuration et secrets</h3>
+      <p><code>deploy/.env</code> (droits 600, hors Git) : <code>DOMAINE</code>, <code>EMAIL_ACME</code>, identifiants PostgreSQL (mot de passe <code>openssl rand -hex 24</code>) ; l'URL de connexion et les origines CORS sont construites dans <code>compose.yaml</code>. Serveur : utilisateur dédié, SSH par clé uniquement, root désactivé, mises à jour de sécurité automatiques. Docker contournant ufw pour les ports publiés, <strong>seul Caddy publie des ports</strong>.</p>
+    </div>
+    <div>
+      <h3>Extraits</h3>
+<pre class="code">x-backend: &amp;backend          # image commune api / etl / migration
+  build: ../backend
+  environment:
+    URL_BASE_DE_DONNEES: postgresql+psycopg://${POSTGRES_USER}:…@db:5432/…
+api:
+  &lt;&lt;: *backend
+  depends_on: { migration: { condition: service_completed_successfully } }
+  networks: [interne]
+networks:
+  interne: { internal: true }   # aucun accès Internet</pre>
+<pre class="code">{$DOMAINE} {
+  encode zstd gzip
+  header { Strict-Transport-Security "max-age=31536000"  -Server … }
+  handle /api/* { reverse_proxy api:8000 }
+  handle { root * /srv ; try_files {path} /index.html ; file_server }
+}</pre>
+    </div>
+  </div>
+  <h3>Procédure et exploitation</h3>
+  <table>
+    <tr><th>Opération</th><th>Commandes / moyen</th></tr>
+    <tr><td>Premier déploiement</td><td><code>git checkout v1.0.0</code> → <code>cp .env.example .env</code> → <code>docker compose up -d --build</code> → <code>docker compose run --rm etl</code></td></tr>
+    <tr><td>Tâches planifiées</td><td>cron : import le 6 du mois (publication NOAA vers le 5) ; <code>sauvegarder.sh</code> chaque nuit (pg_dump, 14 jours) + copie hors serveur</td></tr>
+    <tr><td>Mise à jour</td><td>sauvegarde → <code>git checkout</code> de la nouvelle étiquette → <code>up -d --build</code> (migrations automatiques)</td></tr>
+    <tr><td>Retour arrière</td><td>étiquette précédente ; <code>alembic downgrade</code> ou <code>restaurer.sh</code> si le schéma a changé</td></tr>
+    <tr><td>Journaux et supervision</td><td><code>docker compose logs</code> (Caddy en JSON), contrôles de santé, sonde externe sur <code>/api/v1/sante</code> (503 si la base est indisponible), <code>restart: unless-stopped</code></td></tr>
+    <tr><td>Panne</td><td>import échoué → statut et message dans <code>imports</code>, données existantes toujours servies ; données corrompues → <code>restaurer.sh</code></td></tr>
+  </table>
+  <p><strong>Preuves (exécution locale)</strong> : migration appliquée au démarrage ; 921 observations importées via Docker ; HTTP → 308 HTTPS ; API, frontend et <code>/api/docs</code> en 200 ; en-têtes HSTS/CSP présents ; accès Internet depuis l'API <strong>bloqué</strong> ; processus <code>enso</code> non-root ; sauvegarde → suppression de 600 lignes → restauration (921 → 321 → 921).</p>
+  <p><strong>Limites</strong> : un seul serveur (point unique de défaillance, ≈ 30 min de reconstruction) ; quelques secondes d'indisponibilité pendant une restauration. Pistes : base managée ou répliquée, plusieurs instances de l'API, cache HTTP, limitation du débit dans Caddy.</p>
+</section>
+
+<!-- ============================ 8. BILAN ============================ -->
+<section class="section">
+  <h2>8. Bilan et sources</h2>
+  <h3>Choix justifiés — synthèse</h3>
+  <p>ONI plutôt que RONI (section 1) ; comparaison 1997-1998 / 2015-2016 (deux épisodes complets et très documentés) sur des fenêtres identiques de 18 saisons ; règles dans le domaine et renvoyées avec chaque résultat ; ETL idempotent qui applique les révisions de la NOAA ; accessibilité traitée comme une exigence fonctionnelle ; production minimale mais sûre. Chaque décision est tracée dans le dépôt (issue, pull request, commits).</p>
+  <p class="encadre">Résultat principal (comparaison 1997-1998 / 2015-2016, mêmes fenêtres de 18 saisons) : selon l'ONI v6, le pic de 2015-2016 (+2,59 °C, NDJ 2015) dépasse celui de 1997-1998 (+2,37 °C, NDJ 1997) de 0,22 °C, et l'anomalie reste au-dessus de +0,5 °C pendant 17 saisons contre 12 — sans conclusion sur les impacts, ni sur l'effet du réchauffement de fond que le RONI corrigerait.</p>
+  <h3>Apports et limites de l'IA</h3>
+  <p><strong>Outils</strong> : Claude (Anthropic) via Claude Code comme assistant de développement — architecture, code, tests, documentation, débogage, explications ; GitHub CLI pour automatiser la saisie du backlog et des pull requests. <strong>Parties principalement assistées</strong> : backend, ETL, API, frontend, tests, déploiement, documentation. <strong>Ma part</strong> : <em>cadrage</em> — lecture du sujet, périmètre du MVP, priorités, planning et replanification ; <em>décisions</em> — choix de l'indice, des épisodes, de l'architecture et des conventions après comparaison des options ; <em>pilotage</em> — compte GitHub personnel, dépôt et tableau, issues, versions ; <em>revue de code</em> — relecture de chaque pull request et corrections demandées avant fusion ; <em>vérification</em> — données contrôlées à la source NOAA, tests approfondis de l'application dans deux navigateurs (anomalie #44 découverte dans Safari), démonstration enregistrée dont la relecture a révélé l'anomalie #46. <strong>Limites constatées et corrigées</strong> : une hypothèse fausse sur la version de l'indice (ERSST.v5) corrigée en comparant les valeurs aux tables officielles ; un test d'accessibilité qui ne pouvait pas échouer, renforcé. L'IA accélère, mais chaque proposition doit être vérifiée.</p>
+  <h3>Difficultés et corrections</h3>
+  <ul>
+    <li><strong>Organisation</strong> : agenda contraint par deux emplois et la vie de famille, puis une journée presque perdue au début du développement → replanification, MVP priorisé, coupes prévues mais non nécessaires.</li>
+    <li><strong>Données</strong> : version de l'indice à établir (v6), RONI devenu officiel, révisions récentes de la NOAA → mises à jour gérées par l'ETL ; durée d'un épisode dépendante de la fenêtre → limite affichée.</li>
+    <li><strong>Tests</strong> : un test « vert » ne prouve rien s'il ne peut pas échouer → chaque test sensible vérifié en échec ; un test qui échouait pour une mauvaise raison (CSS vide dans l'environnement de test) → corrigé et protégé par un contrôle.</li>
+    <li><strong>Navigateurs</strong> : filtre de période inutilisable dans Safari, découvert en testant comme un utilisateur → anomalie #44 corrigée ; les tests automatiques ne remplacent pas un essai réel sur plusieurs navigateurs.</li>
+  </ul>
+  <h3>Retour d'expérience</h3>
+  <p>Ce projet a été mené seul, en parallèle de deux emplois — à distance en journée, sur site le soir — et de ma vie de famille avec un jeune enfant. La principale difficulté a été d'organiser mon agenda : après avoir créé le dépôt début novembre, j'ai concentré le développement sur cinq jours, dont un a été presque entièrement perdu dès le départ. J'ai appris à m'organiser : découper le sujet en tâches courtes, prioriser l'essentiel, définir à l'avance ce que je supprimerais si nécessaire — aucune coupe n'a finalement été nécessaire — et suivre l'avancement par les issues, les pull requests et les versions. Sur le plan technique, j'ai appris qu'un test qui passe ne prouve rien s'il ne peut pas échouer : j'ai donc vérifié chaque test important en le faisant d'abord échouer. J'ai utilisé l'IA générative, comme le sujet l'autorise, mais c'est en vérifiant la source que la version de l'indice a été corrigée, et en testant l'application comme un utilisateur, dans Safari, que j'ai découvert une anomalie que les tests automatisés n'avaient pas détectée. Si je recommençais, je réserverais du temps chaque semaine dès la réception du sujet et je testerais plus tôt sur plusieurs navigateurs. Ce projet m'a montré le développeur que je veux devenir : quelqu'un qui comprend, vérifie et justifie ce qu'il livre.</p>
+  <h3>Perspectives</h3>
+  <p>Passage au RONI, détection automatique des épisodes, carte de situation actuelle, cache HTTP et chargement différé du graphique, tests de bout en bout avec Playwright.</p>
+  <h3>Sources</h3>
+  <ul class="petit sources">
+    <li>NOAA CPC — ONI v6 (ERSST.v6), tables et méthode : cpc.ncep.noaa.gov/products/analysis_monitoring/enso/oni/v6/ ; fichier : cpc.ncep.noaa.gov/data/indices/oni.ascii.txt (extrait le 19/11/2026)</li>
+    <li>NOAA CPC — RONI : cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/ ; NWS Public Information Statement 26-05 (RONI indice officiel)</li>
+    <li>Huang et al. (2025), <em>Journal of Climate</em> 38(4) — ERSST version 6 ; définition opérationnelle El Niño / La Niña (NOAA CPC)</li>
+    <li>W3C — WCAG 2.2 (1.4.3 et 1.4.11, contrastes) ; RGAA 4 ; France compétences — RNCP 36146 ; documentations officielles des outils</li>
+  </ul>
+</section>
+
+</body>
+</html>

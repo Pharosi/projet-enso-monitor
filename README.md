@@ -2,7 +2,7 @@
 
 Plateforme d'analyse des épisodes **El Niño** et **La Niña** à partir de l'indice océanique **ONI** publié par la NOAA (Climate Prediction Center).
 
-Projet individuel de certification — RNCP 36146, *Concepteur développeur de solutions digitales* (niveau 6), HETIC. Auteur : Raphael Paes Rodrigues da Silva.
+Projet individuel de certification — RNCP 36146, *Concepteur développeur de solutions digitales* (niveau 6), HETIC. Auteur : Raphael PAES RODRIGUES DA SILVA.
 
 ![Courbe de l'indice ONI de 1950 à 2026](docs/images/courbe-oni.jpg)
 
@@ -81,7 +81,7 @@ projet-enso-monitor/
 └── .env.example            # modèle des variables de développement
 ```
 
-Le dossier de conception (livrable B) détaille les diagrammes UML, le schéma relationnel et la justification de chaque choix.
+Le dossier de conception (livrable B, [`docs/dossier/`](docs/dossier/)) détaille les diagrammes UML, le schéma relationnel et la justification de chaque choix. Il est écrit en HTML et converti en PDF par Chrome : `docs/dossier/.venv/bin/python docs/dossier/generer_pdf.py` (voir l'en-tête du script).
 
 ## Démarrage local
 
@@ -168,8 +168,18 @@ Production : `deploy/.env` (modèle `deploy/.env.example`), voir [`deploy/README
 
 - La version a été **vérifiée à la source** : les valeurs du fichier correspondent à la table officielle ONI v6, et non à la v5.
 - La NOAA prévient que les **deux derniers mois peuvent être révisés** : l'ETL met à jour une valeur qui change.
-- Depuis 2026, la NOAA utilise le **RONI** (*Relative ONI*) pour la surveillance officielle de l'ENSO. Ce projet, consacré à l'**analyse historique**, utilise l'ONI, comme le sujet l'autorise.
 - Un **extrait authentique** (1997-1998, 24 saisons) est versionné dans `backend/tests/donnees/` : les tests ne dépendent pas d'Internet.
+
+### Pourquoi l'ONI plutôt que le RONI ?
+
+Le sujet autorise l'un ou l'autre. Les deux indices sont aussi fiables — mêmes mesures de la NOAA (ERSST v6) — mais ne répondent pas à la même question :
+
+| | ONI | RONI (*Relative ONI*) |
+| - | --- | --- |
+| Question | De combien la région Niño 3.4 est-elle plus chaude que la normale ? | De combien la région Niño 3.4 est-elle plus chaude que le reste de l'océan tropical ? |
+| Adapté à | l'**analyse historique** : le tableau officiel des épisodes de la NOAA depuis 1950 est construit avec lui, les chiffres sont donc vérifiables | la **surveillance de l'épisode en cours**, sans l'effet du réchauffement de fond ; indice officiel de la NOAA depuis 2026 |
+
+Ce projet étant consacré à l'analyse historique, il utilise l'ONI. Conséquence : une partie de l'écart entre des épisodes éloignés peut venir du réchauffement de fond ; cette limite est affichée avec chaque comparaison (voir [Limites connues](#limites-connues)).
 
 ## API
 
@@ -312,13 +322,13 @@ Conformément au sujet, l'IA générative a été utilisée comme **assistant de
 
 **Ma démarche** :
 
-- définition du périmètre du MVP, des priorités et du planning à partir du sujet, puis replanification après un retard de deux jours ;
-- validation de chaque décision (indice ONI, épisodes comparés, architecture, conventions de nommage et de Git) ;
-- relecture de chaque pull request avant fusion et exécution des tests ;
-- vérification des données à la source NOAA ;
-- étude de chaque partie du code pour pouvoir l'expliquer et la modifier.
+- **cadrage** : lecture du sujet, définition du périmètre du MVP, des priorités et du planning, puis replanification après une journée presque perdue ;
+- **décisions** : validation de chaque choix après comparaison des options (indice ONI, épisodes comparés, architecture, conventions de nommage et de Git) ;
+- **pilotage** : compte GitHub personnel, dépôt et tableau de suivi, création d'issues, publication des versions ;
+- **revue de code** : relecture de chaque pull request et corrections demandées avant fusion ;
+- **vérification** : données contrôlées à la source NOAA ; tests approfondis de l'application dans deux navigateurs (anomalie #44 découverte dans Safari) ; démonstration enregistrée dont la relecture a révélé l'anomalie #46.
 
-**Corrections apportées aux propositions de l'IA** : une hypothèse erronée sur la version de l'indice (ERSST.v5) a été corrigée après comparaison avec les tables officielles (ONI v6) ; un test d'accessibilité qui ne pouvait pas échouer a été renforcé ; le code a été simplifié lorsque c'était nécessaire pour rester explicable (fonctions courtes, un seul modèle de chargement des données).
+**Corrections apportées aux propositions de l'IA** : une hypothèse erronée sur la version de l'indice (ERSST.v5) a été corrigée après comparaison avec les tables officielles (ONI v6) ; un test d'accessibilité qui ne pouvait pas échouer a été renforcé.
 
 ## Sources
 
