@@ -27,6 +27,21 @@ export function formaterGraduationDate(dateIso: string, nombreDePoints: number):
   return FORMAT_MOIS.format(new Date(`${dateIso}T00:00:00`))
 }
 
+const MAXIMUM_GRADUATIONS = 10
+const PAS_EN_ANNEES = [1, 2, 5, 10, 20]
+
+/** Graduations de l'axe du temps pour une série longue : une par mois de janvier,
+ *  espacées d'un pas « rond » (1, 2, 5, 10 ou 20 ans) pour ne pas dépasser dix étiquettes.
+ *  Chaque étiquette (l'année) est ainsi unique. Série courte : undefined, le graphique
+ *  choisit lui-même (étiquettes « mois année », déjà uniques). */
+export function choisirGraduationsDates(dates: string[]): string[] | undefined {
+  if (dates.length <= 36) return undefined
+  const janviers = dates.filter((date) => date.slice(5, 7) === '01')
+  const pas = PAS_EN_ANNEES.find((valeur) => janviers.length / valeur <= MAXIMUM_GRADUATIONS) ?? 50
+  if (pas === 1) return janviers
+  return janviers.filter((date) => Number(date.slice(0, 4)) % pas === 0)
+}
+
 /** 2.4 -> "2,4 °C" (graduation de l'axe des valeurs). */
 export function formaterGraduationValeur(valeur: number): string {
   return `${valeur.toLocaleString('fr-FR')} °C`

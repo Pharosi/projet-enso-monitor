@@ -226,7 +226,7 @@ Le terme « Super El Niño » n'est pas utilisé : il n'a pas de définition sci
 
 ```bash
 cd backend && pytest -v       # 47 tests (PostgreSQL démarré pour les tests d'intégration)
-cd frontend && npm test       # 30 tests
+cd frontend && npm test       # 33 tests
 ```
 
 Les tests d'intégration du backend utilisent une base dédiée `enso_test`, créée automatiquement ; la base de développement n'est jamais modifiée.
