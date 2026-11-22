@@ -128,7 +128,7 @@
     <tr><td>API FastAPI documentée, filtrage temporel, validation</td><td><code>GET /api/v1/observations?debut&amp;fin</code>, validation Pydantic (422), OpenAPI sur <code>/api/docs</code></td></tr>
     <tr><td>Courbe interactive React/TS et filtre de période</td><td>courbe Recharts, filtre par listes mois/année, unité, version et source visibles, tableau équivalent</td></tr>
     <tr><td>Comparaison de deux épisodes, interprétation prudente</td><td>1997-1998 / 2015-2016 : pics +2,37 / +2,59 °C ; 12 / 17 saisons ≥ +0,5 °C ; règles et 6 limites affichées</td></tr>
-    <tr><td>Trois tests minimaux</td><td>transformation (11 tests), API filtrée (7), changement de période côté frontend (6) — 77 tests au total, exécutés en intégration continue</td></tr>
+    <tr><td>Trois tests minimaux</td><td>transformation (11 tests), API filtrée (7), changement de période côté frontend (6) — 80 tests au total, exécutés en intégration continue</td></tr>
   </table>
   <div class="figure"><img src="../images/courbe-oni.jpg" alt="Capture de l'application : courbe de l'ONI de 1950 à 2026" style="max-height:88mm"><div class="legende">Figure 1 — L'application : filtre de période (mois et année), résumé textuel, série ONI complète (1950-2026) et seuils El Niño / La Niña.</div></div>
 </section>
@@ -464,10 +464,10 @@ flowchart LR
     <tr><td>Domaine (unitaire, sans base)</td><td>Pytest</td><td><strong>test n°1</strong> transformation (doublons, saison/année/anomalie invalides, extrait réel 1997-98) ; classement nouvelles/révisées/inchangées ; seuils, séquences, El Niño 1997 / La Niña 1998, interprétation</td><td>24</td></tr>
     <tr><td>Intégration (PostgreSQL de test)</td><td>Pytest</td><td>ETL complet : traçabilité, ré-import sans doublon, révision, échec sans données partielles</td><td>4</td></tr>
     <tr><td>API</td><td>Pytest + TestClient</td><td><strong>test n°2</strong> période filtrée (12 valeurs attendues), 4 entrées invalides → 422, 404 ; format d'erreur, 500 sans fuite, CORS ; comparaison</td><td>19</td></tr>
-    <tr><td>Frontend</td><td>Vitest + Testing Library</td><td><strong>test n°3</strong> changement de période → nouvelles valeurs ; aucune saisie libre ; erreurs ; comparaison ; service API</td><td>13</td></tr>
+    <tr><td>Frontend</td><td>Vitest + Testing Library</td><td><strong>test n°3</strong> changement de période → nouvelles valeurs ; aucune saisie libre ; erreurs ; graduations de l'axe du temps ; comparaison ; service API</td><td>16</td></tr>
     <tr><td>Accessibilité</td><td>axe-core, calcul WCAG</td><td>0 violation ; nom des graphiques ; contraste de toutes les couleurs</td><td>17</td></tr>
   </table>
-  <p>Principes : base PostgreSQL réelle et dédiée aux tests (comportement des contraintes fidèle) ; téléchargement injecté (tests sans Internet) ; API simulée côté frontend ; tout le jeu (77 tests), le lint, les migrations et le build s'exécutent en <strong>intégration continue</strong> à chaque pull request. Chaque test sensible a été vérifié <strong>en échec</strong> avant d'être considéré comme probant (section 8).</p>
+  <p>Principes : base PostgreSQL réelle et dédiée aux tests (comportement des contraintes fidèle) ; téléchargement injecté (tests sans Internet) ; API simulée côté frontend ; tout le jeu (80 tests), le lint, les migrations et le build s'exécutent en <strong>intégration continue</strong> à chaque pull request. Chaque test sensible a été vérifié <strong>en échec</strong> avant d'être considéré comme probant (section 8).</p>
   <h3>Vérifications UX et accessibilité</h3>
   <p>Navigation complète au clavier (ordre logique, lien d'évitement, focus visible), lecteur d'écran (résumé <code>aria-live</code> relié à la figure, tableau équivalent, <code>role="alert"</code> pour les erreurs), contrastes mesurés (texte ≥ 6,9:1), courbes distinguées par la couleur et le trait, affichage à 375 px sans défilement horizontal, textes et nombres au format français.</p>
   <h3>Sécurité</h3>
@@ -490,6 +490,7 @@ flowchart LR
     Démarche : issue de type bug → branche <code>fix/36-contraste-focus</code> → <strong>test qui reproduit</strong> l'anomalie (calcul du contraste depuis <code>index.css</code> : 2 échecs, commit séparé) → correction <code>#b45309</code> (<strong>5,02:1</strong>) → test vert, suite complète verte, contrôle visuel au clavier → PR #37. Le test couvre toutes les couleurs : toute régression future sera détectée.
   </div>
   <div class="encadre"><strong>Anomalie #44</strong> (constatée lors d'un test manuel dans Safari) : le champ <code>&lt;input type="month"&gt;</code> n'existe pas dans Safari, qui affichait un champ texte libre ; une saisie naturelle (01/01/1997) provoquait une erreur 422. Même démarche : tests qui échouent, remplacement par des listes mois/année identiques dans tous les navigateurs, tests verts (PR #45). Leçon : vérifier aussi dans un second moteur de navigateur.</div>
+  <div class="encadre"><strong>Anomalie #46</strong> (révélée par la relecture d'une démonstration enregistrée) : sur une période courte, l'axe du temps répétait la même année (« 1985 1985 1985… »), car seule l'année était affichée alors que le graphique plaçait une graduation tous les quelques mois. Même démarche : test qui échoue, puis une graduation par mois de janvier, espacée d'un pas rond (1, 2, 5, 10 ans) pour ne pas dépasser dix étiquettes ; tests verts (PR #47).</div>
   <p class="petit">Autres anomalies corrigées pendant le développement : résumé lu deux fois par les lecteurs d'écran, graphiques focalisables sans nom accessible, libellés superposés, documentation de l'API inaccessible derrière le proxy, numéro de version incohérent avant une publication.</p>
 </section>
 

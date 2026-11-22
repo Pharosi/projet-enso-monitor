@@ -10,7 +10,7 @@ Sorties réelles des commandes, conservées comme preuves pour le livrable A («
 | n°2 — route FastAPI filtrée par période, réponse attendue et entrée invalide | `backend/tests/test_api_observations.py` | [`test-2-api.txt`](test-2-api.txt) | 7 réussis |
 | n°3 — un changement de période actualise les valeurs affichées | `frontend/src/tests/SectionSerie.test.tsx` | [`test-3-frontend.txt`](test-3-frontend.txt) | 6 réussis |
 
-Suites complètes : [`suites-completes.txt`](suites-completes.txt) — **47 tests backend et 30 tests frontend réussis**.
+Suites complètes : [`suites-completes.txt`](suites-completes.txt) — **47 tests backend et 33 tests frontend réussis**.
 
 ## Intégration continue
 
@@ -34,6 +34,14 @@ Les mêmes tests, ainsi que le lint, les migrations (`alembic upgrade head` + `a
 | Les tests reproduisent l'anomalie (listes mois/année absentes, champ libre présent) → 4 échecs | [`anomalie-44-avant-correction.txt`](anomalie-44-avant-correction.txt) |
 | Après correction (listes mois/année) : 6/6 et suite frontend complète verte (30) | [`anomalie-44-apres-correction.txt`](anomalie-44-apres-correction.txt) |
 | Filtre corrigé : janvier 1997 → décembre 1998, 24 saisons | [`anomalie-44-filtre-apres.png`](anomalie-44-filtre-apres.png) |
+
+### Issue #46 — années répétées sur l'axe du temps (relecture d'une démonstration enregistrée)
+
+| Étape | Preuve |
+| ----- | ------ |
+| Le test décrit le comportement attendu (une étiquette unique par graduation) et échoue : fonction de choix des graduations absente → 3 échecs | [`anomalie-46-avant-correction.txt`](anomalie-46-avant-correction.txt) |
+| Après correction : 3/3 et suite frontend complète verte (33) | [`anomalie-46-apres-correction.txt`](anomalie-46-apres-correction.txt) |
+| Axe corrigé : janvier 1985 → décembre 1988, graduations 1985, 1986, 1987, 1988 | [`anomalie-46-axe-apres.jpg`](anomalie-46-axe-apres.jpg) |
 
 ## Déploiement de production exécuté en local
 
