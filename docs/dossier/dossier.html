@@ -40,6 +40,8 @@
   .encadre { border-left: 3px solid var(--principale); background: var(--fond); padding: 5px 8px; margin: 6px 0; break-inside: avoid; }
   .deux-colonnes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .petit { font-size: 8.3pt; color: var(--secondaire); }
+  ul.sources { font-size: 7.8pt; line-height: 1.3; margin: 2px 0; }
+  ul.sources li { margin: 0; }
   .ok { color: #1e6b3a; font-weight: 600; }
   .mermaid { margin: 0 auto; }
   .schema { break-inside: avoid; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; align-items: start; }
@@ -89,11 +91,11 @@
     <p style="margin:0 0 10mm;font-size:10pt;letter-spacing:.08em;">HETIC — WEB3 · SUJET DE RATTRAPAGE</p>
     <h1>ENSO Monitor</h1>
     <p class="sous-titre">Conception et développement d'une plateforme d'analyse d'El Niño et de La Niña</p>
-    <svg class="vague" viewBox="0 0 400 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 25 C 50 0, 100 0, 150 25 S 250 50, 300 25 S 380 5, 400 20" fill="none" stroke="#f4a259" stroke-width="4"/></svg>
+    <svg class="vague" viewBox="0 0 400 40" preserveAspectRatio="none" aria-hidden="true"><path d="M2 20 C 50 4, 100 4, 150 20 S 250 36, 300 20 S 370 6, 398 14" fill="none" stroke="#f4a259" stroke-width="4"/></svg>
     <p style="margin:6mm 0 0;font-size:16pt;font-weight:600;">Dossier de conception</p>
   </div>
   <dl>
-    <dt>Candidat</dt><dd>Raphael Paes Rodrigues da Silva</dd>
+    <dt>Candidat</dt><dd>Raphael PAES RODRIGUES DA SILVA</dd>
     <dt>Titre visé</dt><dd>RNCP 36146 — Concepteur développeur de solutions digitales (niveau 6)</dd>
     <dt>Bloc présenté</dt><dd>BC03 — Développer une solution digitale</dd>
     <dt>Données</dt><dd>Indice ONI v6 (ERSST.v6) — NOAA Climate Prediction Center</dd>
@@ -128,7 +130,7 @@
     <tr><td>Comparaison de deux épisodes, interprétation prudente</td><td>1997-1998 / 2015-2016 : pics +2,37 / +2,59 °C ; 12 / 17 saisons ≥ +0,5 °C ; règles et 6 limites affichées</td></tr>
     <tr><td>Trois tests minimaux</td><td>transformation (11 tests), API filtrée (7), changement de période côté frontend (6) — 77 tests au total, exécutés en intégration continue</td></tr>
   </table>
-  <div class="figure"><img src="../images/courbe-oni.jpg" alt="Capture de l'application : courbe de l'ONI de 1950 à 2026" style="max-height:88mm"><div class="legende">Figure 1 — L'application : série ONI complète (1950-2026), résumé textuel et seuils El Niño / La Niña.</div></div>
+  <div class="figure"><img src="../images/courbe-oni.jpg" alt="Capture de l'application : courbe de l'ONI de 1950 à 2026" style="max-height:88mm"><div class="legende">Figure 1 — L'application : filtre de période (mois et année), résumé textuel, série ONI complète (1950-2026) et seuils El Niño / La Niña.</div></div>
 </section>
 
 <!-- ============================ 1. BESOIN ============================ -->
@@ -148,15 +150,15 @@
   </table>
   <h3>Contraintes</h3>
   <ul>
-    <li><strong>Temps</strong> : sujet calibré pour cinq jours de travail, reçu le 26 octobre ; projet individuel mené en parallèle d'un emploi du soir qui limitait mes disponibilités : dépôt créé le 3/11, puis développement concentré du 17 au 22/11, dont deux jours perdus au démarrage (section 5).</li>
-    <li><strong>Technique imposée</strong> : React/TypeScript/Vite, FastAPI/Pydantic, PostgreSQL/SQLAlchemy/Alembic, ETL Python Pandas/NumPy, tests Pytest et Vitest, déploiement Docker Compose + Caddy documenté.</li>
+    <li><strong>Temps</strong> : sujet calibré pour cinq jours de travail, reçu le 26 octobre ; projet individuel mené en parallèle de deux emplois (à distance en journée, sur site le soir) et de ma vie de famille avec un jeune enfant : dépôt créé le 3/11, puis développement concentré du 17 au 22/11, dont une journée presque entièrement perdue au démarrage (section 5).</li>
+    <li><strong>Technique (imposée par le sujet)</strong> : React/TypeScript/Vite, FastAPI/Pydantic, PostgreSQL/SQLAlchemy/Alembic, ETL Python Pandas/NumPy, tests Pytest et Vitest, déploiement Docker Compose + Caddy documenté.</li>
     <li><strong>Scientifique</strong> : une seule série authentique (ONI <em>ou</em> RONI), source et version documentées, classification explicite (seuils, durée, indice), aucune prévision.</li>
-    <li><strong>Financière</strong> : aucune dépense ; déploiement réel facultatif → démonstration locale complète.</li>
+    <li><strong>Budget</strong> : aucun ; le déploiement réel étant facultatif, la mise en production est documentée et démontrée en local, sans achat d'hébergement (section 7).</li>
   </ul>
   <h3>Périmètre du MVP et hors périmètre</h3>
   <div class="deux-colonnes">
     <div class="encadre"><strong>Dans le MVP</strong><ul><li>import ONI traçable et sans doublon</li><li>API de consultation filtrée et de comparaison</li><li>courbe, filtre, comparaison, interprétation, limites</li><li>accessibilité, responsive, états d'erreur</li><li>tests, intégration continue, déploiement documenté</li></ul></div>
-    <div class="encadre"><strong>Hors périmètre (choix assumés)</strong><ul><li>prévision climatique (exclue par le sujet)</li><li>administration et comptes utilisateurs</li><li>second indice (RONI) et données ERA5</li><li>détection automatique de tous les épisodes</li><li>cartographie, exports</li></ul></div>
+    <div class="encadre"><strong>Hors périmètre (choix assumés)</strong><ul><li>prévision climatique (exclue par le sujet)</li><li>administration et comptes utilisateurs</li><li>second indice (RONI) et données Copernicus ERA5 (bonus du sujet)</li><li>détection automatique de tous les épisodes</li><li>cartographie, exports</li></ul></div>
   </div>
   <div style="break-inside: avoid">
   <h3>Choix de l'indice : ONI plutôt que RONI</h3>
@@ -196,14 +198,19 @@
   <p class="petit">Parcours de l'exploitant : import mensuel planifié, contrôle de la table <code>imports</code>, sauvegardes (section 7).</p>
   <h3>Wireframes et maquette</h3>
   <div class="figure">
-    <svg viewBox="0 0 640 250" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, sans-serif" font-size="9" fill="#1b2631">
+    <svg viewBox="0 0 640 262" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, sans-serif" font-size="9" fill="#1b2631">
       <rect x="1" y="1" width="420" height="246" rx="6" fill="#fff" stroke="#4a5868"/>
       <text x="10" y="16" font-weight="700" font-size="11" fill="#0b4f6c">ENSO Monitor</text><text x="10" y="28" fill="#4a5868">Navigation : Évolution · Comparaison</text>
       <rect x="10" y="36" width="400" height="104" rx="4" fill="#f7f9fb" stroke="#c9d3dd"/>
       <text x="18" y="50" font-weight="700">Évolution de l'indice ONI</text>
-      <rect x="18" y="56" width="70" height="14" fill="#fff" stroke="#c9d3dd"/><text x="22" y="66">Début (mois, an)</text>
-      <rect x="94" y="56" width="70" height="14" fill="#fff" stroke="#c9d3dd"/><text x="98" y="66">Fin (mois)</text>
-      <rect x="170" y="56" width="44" height="14" fill="#0b4f6c"/><text x="176" y="66" fill="#fff">Afficher</text>
+      <text x="18" y="63" fill="#4a5868" font-size="8">Début</text>
+      <rect x="44" y="55" width="40" height="12" fill="#fff" stroke="#c9d3dd"/><text x="47" y="64" font-size="8">Mois ▾</text>
+      <rect x="88" y="55" width="40" height="12" fill="#fff" stroke="#c9d3dd"/><text x="91" y="64" font-size="8">Année ▾</text>
+      <text x="138" y="63" fill="#4a5868" font-size="8">Fin</text>
+      <rect x="156" y="55" width="40" height="12" fill="#fff" stroke="#c9d3dd"/><text x="159" y="64" font-size="8">Mois ▾</text>
+      <rect x="200" y="55" width="40" height="12" fill="#fff" stroke="#c9d3dd"/><text x="203" y="64" font-size="8">Année ▾</text>
+      <rect x="248" y="55" width="40" height="12" fill="#0b4f6c"/><text x="253" y="64" fill="#fff" font-size="8">Afficher</text>
+      <rect x="292" y="55" width="64" height="12" fill="#fff" stroke="#0b4f6c"/><text x="296" y="64" fill="#0b4f6c" font-size="8">Toute la série</text>
       <text x="18" y="82" fill="#4a5868">Résumé : n saisons, maximum, minimum (lu par lecteur d'écran)</text>
       <rect x="18" y="86" width="384" height="34" fill="#fff" stroke="#c9d3dd"/><path d="M22 110 C60 90, 90 118, 130 98 S 200 92, 240 108 S 330 86, 398 96" fill="none" stroke="#0b4f6c" stroke-width="1.5"/><line x1="22" y1="100" x2="398" y2="100" stroke="#b03a2e" stroke-dasharray="4 3"/>
       <text x="18" y="132" fill="#4a5868">▸ Tableau des données (replié) · Source NOAA, version, date d'extraction</text>
@@ -211,23 +218,27 @@
       <text x="18" y="160" font-weight="700">Comparer deux épisodes</text>
       <rect x="18" y="166" width="80" height="14" fill="#fff" stroke="#c9d3dd"/><text x="22" y="176">Épisode A ▾</text>
       <rect x="104" y="166" width="80" height="14" fill="#fff" stroke="#c9d3dd"/><text x="108" y="176">Épisode B ▾</text>
-      <rect x="190" y="166" width="48" height="14" fill="#0b4f6c"/><text x="194" y="176" fill="#fff">Comparer</text>
+      <rect x="190" y="166" width="52" height="14" fill="#0b4f6c"/><text x="194" y="176" fill="#fff">Comparer</text>
       <rect x="18" y="186" width="190" height="48" fill="#fff" stroke="#c9d3dd"/><text x="24" y="200" fill="#4a5868">Courbes A / B superposées</text>
       <rect x="214" y="186" width="188" height="48" fill="#fff" stroke="#c9d3dd"/><text x="220" y="200" fill="#4a5868">Indicateurs A | B</text><text x="220" y="214" fill="#4a5868">Interprétation · Règles</text><text x="220" y="228" fill="#4a5868">Limites</text>
-      <text x="200" y="250" text-anchor="middle" fill="#4a5868" font-size="8">Bureau (≥ 720 px)</text>
+      <text x="211" y="259" text-anchor="middle" fill="#4a5868" font-size="8">Bureau (≥ 720 px)</text>
       <rect x="450" y="1" width="150" height="246" rx="10" fill="#fff" stroke="#4a5868"/>
       <text x="460" y="18" font-weight="700" fill="#0b4f6c">ENSO Monitor</text>
-      <rect x="460" y="26" width="130" height="14" fill="#fff" stroke="#c9d3dd"/><text x="464" y="36">Début</text>
-      <rect x="460" y="44" width="130" height="14" fill="#fff" stroke="#c9d3dd"/><text x="464" y="54">Fin</text>
+      <text x="460" y="36" fill="#4a5868" font-size="8">Début</text>
+      <rect x="486" y="27" width="50" height="12" fill="#fff" stroke="#c9d3dd"/><text x="489" y="36" font-size="8">Mois ▾</text>
+      <rect x="540" y="27" width="50" height="12" fill="#fff" stroke="#c9d3dd"/><text x="543" y="36" font-size="8">Année ▾</text>
+      <text x="460" y="54" fill="#4a5868" font-size="8">Fin</text>
+      <rect x="486" y="45" width="50" height="12" fill="#fff" stroke="#c9d3dd"/><text x="489" y="54" font-size="8">Mois ▾</text>
+      <rect x="540" y="45" width="50" height="12" fill="#fff" stroke="#c9d3dd"/><text x="543" y="54" font-size="8">Année ▾</text>
       <rect x="460" y="62" width="60" height="14" fill="#0b4f6c"/><text x="466" y="72" fill="#fff">Afficher</text>
       <rect x="460" y="82" width="130" height="50" fill="#fff" stroke="#c9d3dd"/><path d="M464 120 C480 100, 500 126, 520 106 S 560 98, 586 110" fill="none" stroke="#0b4f6c" stroke-width="1.5"/>
       <text x="460" y="146" fill="#4a5868">▸ Tableau (défile)</text>
       <rect x="460" y="154" width="130" height="14" fill="#fff" stroke="#c9d3dd"/><text x="464" y="164">Épisode A ▾</text>
       <rect x="460" y="172" width="130" height="14" fill="#fff" stroke="#c9d3dd"/><text x="464" y="182">Épisode B ▾</text>
       <rect x="460" y="190" width="130" height="40" fill="#fff" stroke="#c9d3dd"/><text x="466" y="206" fill="#4a5868">Courbes, indicateurs,</text><text x="466" y="220" fill="#4a5868">interprétation (empilés)</text>
-      <text x="525" y="244" text-anchor="middle" fill="#4a5868" font-size="8">Mobile (375 px)</text>
+      <text x="525" y="259" text-anchor="middle" fill="#4a5868" font-size="8">Mobile (375 px)</text>
     </svg>
-    <div class="legende">Figure 3 — Wireframes basse fidélité : une page, deux sections ; sur mobile, les éléments s'empilent. La maquette réalisée figure page 2 et en section 8.</div>
+    <div class="legende">Figure 2 — Wireframes basse fidélité : une page, deux sections ; sur mobile, les éléments s'empilent. L'écran réalisé est présenté en figure 1.</div>
   </div>
   <p class="petit">Choix UX : une seule page (deux tâches, pas de navigation complexe) ; la requête ne part qu'à la validation du formulaire ; la comparaison la plus parlante (1997-98 / 2015-16) est affichée dès l'ouverture ; couleurs de phase conventionnelles (rouge = chaud, bleu = froid) doublées par le style de trait.</p>
 </section>
@@ -259,7 +270,7 @@ flowchart LR
   E --> U6 & U7 & U8
   C --> U6
   U6 --> N
-  </pre><div class="legende">Figure 4 — Cas d'utilisation. Le visiteur n'a besoin d'aucun compte : il n'y a ni donnée personnelle ni écriture côté utilisateur, donc pas d'administrateur applicatif.</div></div>
+  </pre><div class="legende">Figure 3 — Cas d'utilisation. Le visiteur n'a besoin d'aucun compte : il n'y a ni donnée personnelle ni écriture côté utilisateur, donc pas d'administrateur applicatif.</div></div>
   <p>Deux acteurs humains aux droits très différents : le <strong>visiteur</strong> lit uniquement (routes <code>GET</code>) ; l'<strong>exploitant</strong> agit sur le serveur (ETL, sauvegardes) et n'a pas d'interface web, ce qui supprime toute surface d'attaque d'administration. Le <strong>planificateur</strong> déclenche l'import mensuel ; la <strong>NOAA</strong> est un système externe.</p>
 
   <h3>3.2 Modèle de domaine et diagramme de classes</h3>
@@ -273,9 +284,9 @@ classDiagram
   }
   class Indice {
     +id
-    +code «unique» (ONI)
-    +unite (°C)
-    +version (ONI v6)
+    +code «unique» : ONI
+    +unite : °C
+    +version : ONI v6
   }
   class Import {
     +id
@@ -283,22 +294,22 @@ classDiagram
     +date_extraction
     +empreinte_sha256
     +statut
-    +compteurs (lues, insérées…)
+    +compteurs : lues, insérées…
     +message_erreur
   }
   class Observation {
     +id
-    +saison (DJF…NDJ)
+    +saison : DJF…NDJ
     +annee
     +date_periode
     +temperature_totale
     +anomalie
   }
-  Source "1" --> "1..*" Indice : publie
-  Indice "1" --> "0..*" Import : importé par
-  Import "1" --> "0..*" Observation : a écrit
-  Indice "1" --> "0..*" Observation : mesure
-</pre><div class="legende">Figure 5 — Les quatre entités du sujet (types détaillés en 4.3). Le domaine calcule en plus, sans les stocker, l'analyse d'une période (pic, durées, intensité) et l'interprétation.</div></div>
+  Source --> Indice : publie [1 → 1..*]
+  Indice --> Import : importé par [1 → 0..*]
+  Import --> Observation : a écrit [1 → 0..*]
+  Indice --> Observation : mesure [1 → 0..*]
+</pre><div class="legende">Figure 4 — Les quatre entités du sujet (types détaillés en 4.3). Le domaine calcule en plus, sans les stocker, l'analyse d'une période (pic, durées, intensité) et l'interprétation.</div></div>
   <table class="bloc">
     <tr><th>Relation</th><th>Cardinalité</th><th>Justification</th></tr>
     <tr><td>Source → Indice</td><td>1 — 1..*</td><td>la NOAA publie plusieurs indices (ONI, RONI) ; ajouter le RONI ne demanderait aucune modification du schéma</td></tr>
@@ -335,7 +346,7 @@ sequenceDiagram
     end
   end
   R-->>U: résumé, courbe, tableau
-</pre><div class="legende">Figure 6 — Consultation du graphique, du navigateur à PostgreSQL, avec les cas d'erreur (422, 404). Non représentés : erreur inattendue → 500 générique ; une réponse arrivée après une nouvelle demande est ignorée par React (réponse obsolète).</div></div>
+</pre><div class="legende">Figure 5 — Consultation du graphique, du navigateur à PostgreSQL, avec les cas d'erreur (422, 404). Non représentés : erreur inattendue → 500 générique ; une réponse arrivée après une nouvelle demande est ignorée par React (réponse obsolète).</div></div>
 </section>
 
 <!-- ============================ 4. ARCHITECTURE ============================ -->
@@ -354,7 +365,7 @@ flowchart LR
   end
   INF -- "SQL paramétré" --> PG[("PostgreSQL")]
   ETL -- "mensuel" --> N[("NOAA")]
-</pre><div class="legende">Figure 7 — Composants et flux. Les dépendances pointent vers le domaine, qui ne connaît ni FastAPI ni PostgreSQL.</div></div>
+</pre><div class="legende">Figure 6 — Composants et flux. Les dépendances pointent vers le domaine, qui ne connaît ni FastAPI ni PostgreSQL.</div></div>
   <table class="bloc">
     <tr><th>Composant</th><th>Responsabilité</th><th>Ne fait pas</th></tr>
     <tr><td>Frontend</td><td>saisie, affichage, accessibilité ; <code>services/api.ts</code> seul point d'accès réseau</td><td>aucun calcul métier</td></tr>
@@ -400,7 +411,7 @@ flowchart LR
       <tr><td>temperature_totale</td><td>numeric(5,2)</td></tr><tr><td>anomalie</td><td>numeric(4,2), <em>CHECK</em> −5 à +5</td></tr>
       <tr><td colspan="2"><em>UNIQUE (indice_id, date_periode)</em> : anti-doublon + index du filtrage temporel</td></tr></table>
   </div>
-  <p class="legende">Figure 8 — Schéma PostgreSQL (migration Alembic <code>0001</code>, réversible). Toutes les colonnes sont NOT NULL sauf mention ; clés étrangères en ON DELETE RESTRICT.</p></div>
+  <p class="legende">Figure 7 — Schéma PostgreSQL (migration Alembic <code>0001</code>, réversible). Toutes les colonnes sont NOT NULL sauf mention ; clés étrangères en ON DELETE RESTRICT.</p></div>
   <p><strong>Intégrité et migrations</strong> : contraintes nommées par convention (messages lisibles, migrations prévisibles) ; <code>ON DELETE RESTRICT</code> interdit de supprimer une source ou un import encore référencé (traçabilité) ; les bornes de plausibilité sont des constantes du domaine réutilisées par les <code>CHECK</code> et par l'ETL (référence unique). La migration a été testée dans les deux sens et la CI vérifie qu'elle correspond aux modèles.</p>
 </section>
 
@@ -408,7 +419,7 @@ flowchart LR
 <section class="section nouvelle-page">
   <h2>5. Organisation du projet</h2>
   <h3>Outils et méthode</h3>
-  <p><strong>GitHub</strong> : 21 issues avec critères d'acceptation, jalons quotidiens (J1-J6), tableau Kanban (GitHub Projects, automatisé), plus de 20 pull requests relues avant fusion, intégration continue (Actions). <strong>Git</strong> : <code>main</code> (versions), <code>develop</code> (intégration), une branche courte par issue (<code>feature/</code>, <code>fix/</code>, <code>test/</code>, <code>docs/</code>, <code>chore/</code>, <code>ci/</code>), Conventional Commits, fusion par commit de fusion pour conserver la progression. <strong>Versions</strong> : v0.1.0 (données/ETL), v0.2.0 (API), v0.3.0 (frontend), v1.0.0 (livraison). Saisie du backlog et gestion des PR par script GitHub CLI ; assistance de l'IA détaillée en section 8.</p>
+  <p><strong>Méthode</strong> : travaillant seul, je n'ai pas appliqué Scrum (pas d'équipe ni de cérémonies) mais un <strong>Kanban personnel</strong> inspiré de l'agilité : une issue = une tâche courte avec critères d'acceptation, une colonne par état (à faire, en cours, terminé), des jalons quotidiens servant de mini-itérations et une version livrable à chaque étape. <strong>GitHub</strong> : plus de 20 issues avec critères d'acceptation, jalons quotidiens (J1-J6), tableau Kanban (GitHub Projects, automatisé), plus de 20 pull requests relues avant fusion, intégration continue (Actions). <strong>Git</strong> : <code>main</code> (versions), <code>develop</code> (intégration), une branche courte par issue (<code>feature/</code>, <code>fix/</code>, <code>test/</code>, <code>docs/</code>, <code>chore/</code>, <code>ci/</code>), Conventional Commits, fusion par commit de fusion pour conserver la progression. <strong>Versions</strong> : v0.1.0 (données/ETL), v0.2.0 (API), v0.3.0 (frontend), v1.0.0 (livraison). Saisie du backlog et gestion des PR par script GitHub CLI ; assistance de l'IA détaillée en section 8.</p>
   <h3>Backlog personnel (priorisé)</h3>
   <table>
     <tr><th>Jalon</th><th>Issues (priorité haute sauf mention)</th><th>État</th></tr>
@@ -420,12 +431,12 @@ flowchart LR
     <tr><td>J6 Remise</td><td>#20 version v1.0.0, accès au dépôt, ZIP</td><td>22/11</td></tr>
   </table>
   <h3>Planning sur cinq jours : prévu et réalisé</h3>
-  <p>Le sujet a été reçu le 26 octobre. Mon emploi du soir ne me laissant que peu de disponibilités, j'ai préparé le dépôt puis concentré le développement sur cinq jours.</p>
+  <p>Le sujet a été reçu le 26 octobre. Mes deux emplois (journée et soir) et ma vie de famille ne me laissant que peu de disponibilités, j'ai préparé le dépôt puis concentré le développement sur cinq jours.</p>
   <table>
     <tr><th>Jour</th><th>Prévu</th><th>Réalisé</th></tr>
-    <tr><td>26/10 → 16/11</td><td>préparation</td><td>réception du sujet (26/10), analyse, création du dépôt (3/11) ; disponibilités limitées par l'emploi du soir</td></tr>
+    <tr><td>26/10 → 16/11</td><td>préparation</td><td>réception du sujet (26/10), analyse, création du dépôt (3/11) ; disponibilités limitées par mes deux emplois</td></tr>
     <tr><td>Mar. 17/11</td><td>J1 — mise en place</td><td>backlog (20 issues), jalons, tableau, conventions, première PR</td></tr>
-    <tr><td>Mer. 18/11</td><td>J2 — données et ETL</td><td><strong>aucun travail</strong> (contraintes personnelles) : risque réalisé</td></tr>
+    <tr><td>Mer. 18/11</td><td>J2 — données et ETL</td><td>journée <strong>perdue</strong> (contraintes professionnelles et familiales) ; seulement une relecture du projet en fin de soirée : risque réalisé</td></tr>
     <tr><td>Jeu. 19/11</td><td>J3 — API</td><td>J1 + J2 + J3 : structure, PostgreSQL, modèle, ETL, API, tests n°1 et n°2 — versions <strong>v0.1.0</strong> et <strong>v0.2.0</strong></td></tr>
     <tr><td>Ven. 20/11</td><td>J4 — frontend</td><td>J4 (test n°3, accessibilité), anomalie #36, <strong>v0.3.0</strong>, CI, déploiement, README, début du dossier</td></tr>
     <tr><td>Sam. 21/11</td><td>J5 — qualité, déploiement, dossier</td><td>dossier de conception, relecture, préparation de la soutenance</td></tr>
@@ -435,7 +446,7 @@ flowchart LR
   <h3>Risques, arbitrages et suivi</h3>
   <table>
     <tr><th>Risque</th><th>Probabilité / impact</th><th>Prévention</th><th>Ce qui s'est passé</th></tr>
-    <tr><td>Retard sur le planning</td><td>forte / fort</td><td>MVP d'abord ; liste de coupes définie à l'avance (CI → Playwright → démo de production)</td><td><strong>réalisé</strong> : 2 jours perdus → replanification sur 4 jours ; aucune coupe nécessaire</td></tr>
+    <tr><td>Retard sur le planning</td><td>forte / fort</td><td>MVP d'abord ; liste de coupes définie à l'avance (CI → Playwright → démo de production)</td><td><strong>réalisé</strong> : une journée presque perdue → J2 et J3 regroupés le 19/11 ; aucune coupe nécessaire</td></tr>
     <tr><td>Code produit avec l'IA mal compris</td><td>moyenne / critique (soutenance)</td><td>règles de simplicité, relecture de chaque PR, fiches d'étude, exercices de modification</td><td>maîtrisé : code relu et étudié partie par partie</td></tr>
     <tr><td>Erreur sur les données (indice, version)</td><td>moyenne / fort</td><td>vérification à la source, traçabilité</td><td>version v5 supposée → <strong>v6 vérifiée</strong> ; RONI officiel découvert et documenté</td></tr>
     <tr><td>NOAA indisponible</td><td>faible / moyen</td><td>tests sur extrait local, échec tracé, données conservées</td><td>non survenu ; scénario testé (URL invalide)</td></tr>
@@ -498,7 +509,7 @@ flowchart LR
   ETL["etl (cron mensuel)"] --> DB
   ETL --> N[("NOAA")]
   DB -. "pg_dump nocturne" .-> S[("sauvegardes<br/>+ copie hors serveur")]
-</pre><div class="legende">Figure 10 — Architecture cible : seul Caddy est exposé ; l'API, la base et les migrations sont sur un réseau interne sans accès Internet ; volumes persistants pour la base et les certificats.</div></div>
+</pre><div class="legende">Figure 8 — Architecture cible : seul Caddy est exposé ; l'API, la base et les migrations sont sur un réseau interne sans accès Internet ; volumes persistants pour la base et les certificats.</div></div>
   <div class="deux-colonnes">
     <div>
       <h3>Hébergement et dimensionnement</h3>
@@ -544,29 +555,27 @@ networks:
 <section class="section">
   <h2>8. Bilan et sources</h2>
   <h3>Choix justifiés — synthèse</h3>
-  <p>ONI plutôt que RONI (indice historique de référence, autorisé par le sujet, limite documentée) ; comparaison 1997-1998 / 2015-2016 (deux épisodes complets et très documentés) sur des fenêtres identiques de 18 saisons ; règles dans le domaine et renvoyées avec chaque résultat ; ETL idempotent qui applique les révisions de la NOAA ; accessibilité traitée comme une exigence fonctionnelle ; production minimale mais sûre. Chaque décision est tracée dans le dépôt : issue, pull request et commits correspondants.</p>
+  <p>ONI plutôt que RONI (section 1) ; comparaison 1997-1998 / 2015-2016 (deux épisodes complets et très documentés) sur des fenêtres identiques de 18 saisons ; règles dans le domaine et renvoyées avec chaque résultat ; ETL idempotent qui applique les révisions de la NOAA ; accessibilité traitée comme une exigence fonctionnelle ; production minimale mais sûre. Chaque décision est tracée dans le dépôt (issue, pull request, commits).</p>
   <p class="encadre">Résultat principal (comparaison 1997-1998 / 2015-2016, mêmes fenêtres de 18 saisons) : selon l'ONI v6, le pic de 2015-2016 (+2,59 °C, NDJ 2015) dépasse celui de 1997-1998 (+2,37 °C, NDJ 1997) de 0,22 °C, et l'anomalie reste au-dessus de +0,5 °C pendant 17 saisons contre 12 — sans conclusion sur les impacts, ni sur l'effet du réchauffement de fond que le RONI corrigerait.</p>
   <h3>Apports et limites de l'IA</h3>
-  <p><strong>Outils</strong> : Claude (Anthropic) via Claude Code comme assistant de développement — architecture, code, tests, documentation, débogage, explications ; GitHub CLI pour automatiser la saisie du backlog et des pull requests. <strong>Parties principalement assistées</strong> : backend, ETL, API, frontend, tests, déploiement, documentation. <strong>Ma part</strong> : périmètre, priorités et planning ; validation de chaque décision ; relecture de chaque pull request ; vérification des sources ; étude de chaque partie du code. <strong>Limites constatées et corrigées</strong> : une hypothèse fausse sur la version de l'indice (ERSST.v5) corrigée en comparant les valeurs aux tables officielles ; un test d'accessibilité qui ne pouvait pas échouer, renforcé ; du code simplifié pour rester explicable (fonctions courtes, deux niveaux d'imbrication au plus, un seul modèle de chargement des données). L'IA accélère, mais chaque proposition doit être vérifiée.</p>
+  <p><strong>Outils</strong> : Claude (Anthropic) via Claude Code comme assistant de développement — architecture, code, tests, documentation, débogage, explications ; GitHub CLI pour automatiser la saisie du backlog et des pull requests. <strong>Parties principalement assistées</strong> : backend, ETL, API, frontend, tests, déploiement, documentation. <strong>Ma part</strong> : <em>cadrage</em> — lecture du sujet, périmètre du MVP, priorités, planning et replanification ; <em>décisions</em> — choix de l'indice, des épisodes, de l'architecture et des conventions après comparaison des options, exigence d'un code simple et homogène ; <em>pilotage</em> — compte GitHub personnel, dépôt et tableau, issues, relecture et fusion de chaque pull request, versions ; <em>vérification</em> — données contrôlées à la source NOAA, application testée comme un utilisateur dans deux navigateurs (anomalie #44 découverte dans Safari), démonstration enregistrée dont la relecture a révélé l'anomalie #46 ; <em>relecture critique du dossier</em> — calendrier réel, justification ONI/RONI, figures et mise en page corrigés à ma demande ; <em>appropriation</em> — étude de chaque partie du code et du métier à l'aide de fiches, pour pouvoir l'expliquer et le modifier. <strong>Limites constatées et corrigées</strong> : une hypothèse fausse sur la version de l'indice (ERSST.v5) corrigée en comparant les valeurs aux tables officielles ; un test d'accessibilité qui ne pouvait pas échouer, renforcé ; du code simplifié pour rester explicable (fonctions courtes, deux niveaux d'imbrication au plus, un seul modèle de chargement des données). L'IA accélère, mais chaque proposition doit être vérifiée.</p>
   <h3>Difficultés et corrections</h3>
   <ul>
-    <li><strong>Organisation</strong> : agenda contraint par l'emploi du soir, puis deux jours perdus au début du développement → replanification, MVP priorisé, coupes prévues mais non nécessaires.</li>
+    <li><strong>Organisation</strong> : agenda contraint par deux emplois et la vie de famille, puis une journée presque perdue au début du développement → replanification, MVP priorisé, coupes prévues mais non nécessaires.</li>
     <li><strong>Données</strong> : version de l'indice à établir (v6), RONI devenu officiel, révisions récentes de la NOAA → mises à jour gérées par l'ETL ; durée d'un épisode dépendante de la fenêtre → limite affichée.</li>
     <li><strong>Tests</strong> : un test « vert » ne prouve rien s'il ne peut pas échouer → chaque test sensible vérifié en échec ; un test qui échouait pour une mauvaise raison (CSS vide dans l'environnement de test) → corrigé et protégé par un contrôle.</li>
     <li><strong>Navigateurs</strong> : filtre de période inutilisable dans Safari, découvert en testant comme un utilisateur → anomalie #44 corrigée ; les tests automatiques ne remplacent pas un essai réel sur plusieurs navigateurs.</li>
-    <li><strong>Environnement</strong> : proxy de développement perdu après des changements de branche → diagnostic par couches (API seule, puis via le proxy).</li>
   </ul>
   <h3>Retour d'expérience</h3>
-  <p>Ce projet a été mené seul, en parallèle d'un emploi du soir qui limitait fortement mes disponibilités. La principale difficulté a été d'organiser mon agenda : après avoir créé le dépôt début novembre, j'ai concentré le développement sur cinq jours, dont deux ont été perdus dès le départ. J'ai appris à m'organiser : découper le sujet en tâches courtes, prioriser l'essentiel, définir à l'avance ce que je supprimerais si nécessaire — aucune coupe n'a finalement été nécessaire — et suivre l'avancement par les issues, les pull requests et les versions. Sur le plan technique, j'ai appris qu'un test qui passe ne prouve rien s'il ne peut pas échouer : j'ai donc vérifié chaque test important en le faisant d'abord échouer. J'ai utilisé l'IA générative, comme le sujet l'autorise, mais c'est en vérifiant la source que la version de l'indice a été corrigée, et en testant l'application comme un utilisateur, dans Safari, que j'ai découvert une anomalie que les tests automatisés n'avaient pas détectée. Si je recommençais, je réserverais du temps chaque semaine dès la réception du sujet et je testerais plus tôt sur plusieurs navigateurs. Ce projet m'a montré le développeur que je veux devenir : quelqu'un qui comprend, vérifie et justifie ce qu'il livre.</p>
+  <p>Ce projet a été mené seul, en parallèle de deux emplois — à distance en journée, sur site le soir — et de ma vie de famille avec un jeune enfant. La principale difficulté a été d'organiser mon agenda : après avoir créé le dépôt début novembre, j'ai concentré le développement sur cinq jours, dont un a été presque entièrement perdu dès le départ. J'ai appris à m'organiser : découper le sujet en tâches courtes, prioriser l'essentiel, définir à l'avance ce que je supprimerais si nécessaire — aucune coupe n'a finalement été nécessaire — et suivre l'avancement par les issues, les pull requests et les versions. Sur le plan technique, j'ai appris qu'un test qui passe ne prouve rien s'il ne peut pas échouer : j'ai donc vérifié chaque test important en le faisant d'abord échouer. J'ai utilisé l'IA générative, comme le sujet l'autorise, mais c'est en vérifiant la source que la version de l'indice a été corrigée, et en testant l'application comme un utilisateur, dans Safari, que j'ai découvert une anomalie que les tests automatisés n'avaient pas détectée. Si je recommençais, je réserverais du temps chaque semaine dès la réception du sujet et je testerais plus tôt sur plusieurs navigateurs. Ce projet m'a montré le développeur que je veux devenir : quelqu'un qui comprend, vérifie et justifie ce qu'il livre.</p>
   <h3>Perspectives</h3>
-  <p>Passage au RONI (le modèle accepte un second indice), détection automatique des épisodes, carte de situation actuelle, cache HTTP et chargement différé du graphique, tests de bout en bout avec Playwright.</p>
+  <p>Passage au RONI, détection automatique des épisodes, carte de situation actuelle, cache HTTP et chargement différé du graphique, tests de bout en bout avec Playwright.</p>
   <h3>Sources</h3>
-  <ul class="petit">
+  <ul class="petit sources">
     <li>NOAA CPC — ONI v6 (ERSST.v6), tables et méthode : cpc.ncep.noaa.gov/products/analysis_monitoring/enso/oni/v6/ ; fichier : cpc.ncep.noaa.gov/data/indices/oni.ascii.txt (extrait le 19/11/2026)</li>
     <li>NOAA CPC — RONI : cpc.ncep.noaa.gov/products/analysis_monitoring/enso/roni/ ; NWS Public Information Statement 26-05 (RONI indice officiel)</li>
     <li>Huang et al. (2025), <em>Journal of Climate</em> 38(4) — ERSST version 6 ; définition opérationnelle El Niño / La Niña (NOAA CPC)</li>
-    <li>W3C — WCAG 2.2 (1.4.3 contraste du texte, 1.4.11 contraste des éléments non textuels) ; RGAA 4</li>
-    <li>France compétences — RNCP 36146 ; documentations FastAPI, SQLAlchemy, Alembic, Pandas, React, Vite, Recharts, Docker Compose, Caddy</li>
+    <li>W3C — WCAG 2.2 (1.4.3 et 1.4.11, contrastes) ; RGAA 4 ; France compétences — RNCP 36146 ; documentations officielles des outils</li>
   </ul>
 </section>
 

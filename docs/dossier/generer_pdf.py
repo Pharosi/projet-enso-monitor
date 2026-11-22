@@ -83,7 +83,7 @@ def ajouter_metadonnees(pdf: Path) -> None:
     ecrivain.add_metadata(
         {
             "/Title": "ENSO Monitor — Dossier de conception",
-            "/Author": "Raphael Paes Rodrigues da Silva",
+            "/Author": "Raphael PAES RODRIGUES DA SILVA",
             "/Subject": "RNCP 36146 — BC03 — Sujet de rattrapage HETIC WEB3",
         }
     )

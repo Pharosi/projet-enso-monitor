@@ -2,7 +2,7 @@
 
 Plateforme d'analyse des épisodes **El Niño** et **La Niña** à partir de l'indice océanique **ONI** publié par la NOAA (Climate Prediction Center).
 
-Projet individuel de certification — RNCP 36146, *Concepteur développeur de solutions digitales* (niveau 6), HETIC. Auteur : Raphael Paes Rodrigues da Silva.
+Projet individuel de certification — RNCP 36146, *Concepteur développeur de solutions digitales* (niveau 6), HETIC. Auteur : Raphael PAES RODRIGUES DA SILVA.
 
 ![Courbe de l'indice ONI de 1950 à 2026](docs/images/courbe-oni.jpg)
 
@@ -322,11 +322,12 @@ Conformément au sujet, l'IA générative a été utilisée comme **assistant de
 
 **Ma démarche** :
 
-- définition du périmètre du MVP, des priorités et du planning à partir du sujet, puis replanification après un retard de deux jours ;
-- validation de chaque décision (indice ONI, épisodes comparés, architecture, conventions de nommage et de Git) ;
-- relecture de chaque pull request avant fusion et exécution des tests ;
-- vérification des données à la source NOAA ;
-- étude de chaque partie du code pour pouvoir l'expliquer et la modifier.
+- **cadrage** : lecture du sujet, définition du périmètre du MVP, des priorités et du planning, puis replanification après une journée presque perdue ;
+- **décisions** : validation de chaque choix après comparaison des options (indice ONI, épisodes comparés, architecture, conventions de nommage et de Git) et exigence d'un code simple et homogène (fonctions courtes, deux niveaux d'imbrication au plus) ;
+- **pilotage** : compte GitHub personnel, dépôt et tableau de suivi, création d'issues, relecture et fusion de chaque pull request, publication des versions ;
+- **vérification** : données contrôlées à la source NOAA ; application testée comme un utilisateur dans deux navigateurs (anomalie #44 découverte dans Safari) ; démonstration enregistrée dont la relecture a révélé l'anomalie #46 ;
+- **relecture critique du dossier de conception** : calendrier réel, justification ONI/RONI, figures et mise en page corrigés à ma demande ;
+- **appropriation** : étude de chaque partie du code et du métier, pour pouvoir l'expliquer et le modifier.
 
 **Corrections apportées aux propositions de l'IA** : une hypothèse erronée sur la version de l'indice (ERSST.v5) a été corrigée après comparaison avec les tables officielles (ONI v6) ; un test d'accessibilité qui ne pouvait pas échouer a été renforcé ; le code a été simplifié lorsque c'était nécessaire pour rester explicable (fonctions courtes, un seul modèle de chargement des données).
 
