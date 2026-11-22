@@ -323,13 +323,12 @@ Conformément au sujet, l'IA générative a été utilisée comme **assistant de
 **Ma démarche** :
 
 - **cadrage** : lecture du sujet, définition du périmètre du MVP, des priorités et du planning, puis replanification après une journée presque perdue ;
-- **décisions** : validation de chaque choix après comparaison des options (indice ONI, épisodes comparés, architecture, conventions de nommage et de Git) et exigence d'un code simple et homogène (fonctions courtes, deux niveaux d'imbrication au plus) ;
-- **pilotage** : compte GitHub personnel, dépôt et tableau de suivi, création d'issues, relecture et fusion de chaque pull request, publication des versions ;
-- **vérification** : données contrôlées à la source NOAA ; application testée comme un utilisateur dans deux navigateurs (anomalie #44 découverte dans Safari) ; démonstration enregistrée dont la relecture a révélé l'anomalie #46 ;
-- **relecture critique du dossier de conception** : calendrier réel, justification ONI/RONI, figures et mise en page corrigés à ma demande ;
-- **appropriation** : étude de chaque partie du code et du métier, pour pouvoir l'expliquer et le modifier.
+- **décisions** : validation de chaque choix après comparaison des options (indice ONI, épisodes comparés, architecture, conventions de nommage et de Git) ;
+- **pilotage** : compte GitHub personnel, dépôt et tableau de suivi, création d'issues, publication des versions ;
+- **revue de code** : relecture de chaque pull request et corrections demandées avant fusion ;
+- **vérification** : données contrôlées à la source NOAA ; tests approfondis de l'application dans deux navigateurs (anomalie #44 découverte dans Safari) ; démonstration enregistrée dont la relecture a révélé l'anomalie #46.
 
-**Corrections apportées aux propositions de l'IA** : une hypothèse erronée sur la version de l'indice (ERSST.v5) a été corrigée après comparaison avec les tables officielles (ONI v6) ; un test d'accessibilité qui ne pouvait pas échouer a été renforcé ; le code a été simplifié lorsque c'était nécessaire pour rester explicable (fonctions courtes, un seul modèle de chargement des données).
+**Corrections apportées aux propositions de l'IA** : une hypothèse erronée sur la version de l'indice (ERSST.v5) a été corrigée après comparaison avec les tables officielles (ONI v6) ; un test d'accessibilité qui ne pouvait pas échouer a été renforcé.
 
 ## Sources
 
